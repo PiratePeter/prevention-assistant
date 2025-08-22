@@ -1,6 +1,6 @@
 # prevention-assistant
 
-Bärn häckt 2025 - Preventa
+Bärn Häckt 2025 - Preventa
 
 ## Backend
 
