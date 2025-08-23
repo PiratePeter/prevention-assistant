@@ -195,10 +195,6 @@
                 },
                 success: function (response) {
                     console.log("Server Response:", response)
-                    response = JSON.parse(
-                        '{"damage":"yes","damage_desc":"Wasserschaden im Keller durch Rohrbruch","building_info":{"facade":"Holz","basement":"Beton","roof":"Ziegel","heating":"Wärmepumpe"},"specific_questions":[{"question":"Baujahr des Gebäudes?","answer":"1998"},{"question":"Hat es eine Solaranlage?","answer":"Ja, 12 kWp"},{"question":"Wie viele Etagen?","answer":"3"}],"customer":{"firstname":"Luca","lastname":"Müller","email":"luca.mueller@example.com"},"preventions":"text"}'
-                    )
-
                     preventions = response.preventions
 
                     // table 1
