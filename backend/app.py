@@ -1,13 +1,17 @@
+from dotenv import load_dotenv
 from flask import Flask
 from flask_cors import CORS
 
+load_dotenv()
 from routes.llm_routes import llm_bp
+from routes.risk_routes import risk_bp
 
 
 def create_app():
     app = Flask(__name__)
     CORS(app)
     app.register_blueprint(llm_bp)
+    app.register_blueprint(risk_bp)
 
     @app.route("/")
     def index():
