@@ -492,6 +492,8 @@
                         },
                     }
 
+                    const container = $("#question-container")
+                    container.html("")
                     console.log(payload)
 
                     $.ajax({
@@ -501,8 +503,6 @@
                         data: JSON.stringify(payload),
                         success: function (response) {
                             console.log("Server Response:", response)
-                            const container = $("#question-container")
-                            container.html("")
                             response.questions.forEach((q, index) => {
                                 const fieldHTML = `
                                     <div>
