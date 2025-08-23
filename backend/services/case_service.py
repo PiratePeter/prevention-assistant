@@ -28,8 +28,7 @@ def load_cases_logic(_):
     
 def load_case_logic(request):
     session = get_session()
-    data = request.json
-    case_id = data.get('id')
+    case_id = request.args.get('id')
 
     if not case_id:
         return jsonify({'error': 'case_id is required'}), 400
@@ -40,7 +39,37 @@ def load_case_logic(request):
         .all()
     )
 
-    return jsonify(db_questions), 200
+    db_case = (
+        session.query(PreventionCase)
+        .filter(PreventionCase.id == case_id)
+        .first()
+    )
+    damage_desc = db_case.damage_desc
+    response = {
+        "damage":"Nein" if ""==damage_desc else "Ja",
+        "damage_desc": damage_desc,
+        "building_info":{
+            "facade":db_case.facade,
+            "basement":db_case.basement,
+            "roof":db_case.roof,
+            "heating":db_case.heating
+        },
+        "specific_questions":[
+            {
+                "question": db_question.question_text,
+                "answer": db_question.answer_text,
+            }
+            for db_question in db_questions
+        ],
+        "customer":{
+            "firstname":db_case.firstname,
+            "lastname":db_case.lastname,
+            "email":db_case.email
+        },
+        "preventions":"text" #TODO get preventions
+    }
+
+    return jsonify(response), 200
 
 def save_case_logic(request):
     session = get_session()
