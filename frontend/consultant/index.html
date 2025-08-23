@@ -40,7 +40,7 @@
             }
 
             /*table*/
-            #dataTableContainer {
+            #data-table-container {
                 width: 90%;
                 margin: 50px auto;
                 background: white;
@@ -69,8 +69,8 @@
         <div id="header">
             <img src="../res/logo.png" height="75px" />
         </div>
-        <div id="dataTableContainer">
-            <table id="myTable" class="display" style="width: 100%">
+        <div id="data-table-container">
+            <table id="case-table" class="display" style="width: 100%">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -84,115 +84,40 @@
             </table>
         </div>
         <script>
-            // gen data
-            const schweizerNamen = [
-                "Müller",
-                "Meier",
-                "Schmid",
-                "Keller",
-                "Weber",
-                "Frei",
-                "Zimmermann",
-                "Huber",
-                "Schneider",
-                "Graf",
-                "Baumann",
-                "Wenger",
-                "Fischer",
-                "Roth",
-                "Brunner",
-                "Bühler",
-                "Schärer",
-                "Jost",
-                "Schweizer",
-                "Ritter",
-                "Bachmann",
-            ]
+            $.ajax({
+                url: "http://localhost:5000/api/cases",
+                method: "GET",
+                contentType: "application/json",
+                success: function (response) {
+                    console.log("Server Response:", response)
 
-            let data = []
-            let startID = 100001
-
-            function randomDate(start, end) {
-                const ts =
-                    start.getTime() +
-                    Math.random() * (end.getTime() - start.getTime())
-                return new Date(ts)
-            }
-
-            function formatDate(d) {
-                let dd = String(d.getDate()).padStart(2, "0")
-                let mm = String(d.getMonth() + 1).padStart(2, "0")
-                let yyyy = d.getFullYear()
-                let hh = String(d.getHours()).padStart(2, "0")
-                let min = String(d.getMinutes()).padStart(2, "0")
-                return `${dd}.${mm}.${yyyy} ${hh}:${min}`
-            }
-
-            const startDate = new Date("2025-08-01T00:00:00")
-            const endDate = new Date("2025-08-23T16:00:00")
-
-            for (let i = 0; i < 25; i++) {
-                let vorname = [
-                    "Luca",
-                    "Emma",
-                    "Noah",
-                    "Mia",
-                    "Leon",
-                    "Sofia",
-                    "Elias",
-                    "Lina",
-                    "Liam",
-                    "Lara",
-                    "Jonas",
-                    "Anna",
-                    "David",
-                    "Laura",
-                    "Tim",
-                    "Sarah",
-                    "Paul",
-                    "Julia",
-                    "Nico",
-                    "Elena",
-                    "Jan",
-                    "Lisa",
-                    "Marc",
-                    "Nina",
-                    "Simon",
-                    "Lea",
-                ][i % 25]
-                let name = schweizerNamen[i % schweizerNamen.length]
-                let datum = randomDate(startDate, endDate)
-
-                data.push({
-                    ID: startID + i,
-                    Vorname: vorname,
-                    Name: name,
-                    Datum: formatDate(datum),
-                })
-            }
-
-            // init table
-            $(document).ready(function () {
-                $("#myTable").DataTable({
-                    data: data,
-                    language: {
-                        url: "https://cdn.datatables.net/plug-ins/1.10.22/i18n/German.json",
-                    },
-                    columns: [
-                        { data: "ID" },
-                        { data: "Vorname" },
-                        { data: "Name" },
-                        { data: "Datum" },
-                        {
-                            data: null,
-                            render: function (data, type, row) {
-                                return `<a class="btn-view" href="claim.html?id=${row.ID}"><i class="fa-solid fa-eye"></i></button>`
+                    // init table
+                    $(document).ready(function () {
+                        $("#case-table").DataTable({
+                            data: response,
+                            language: {
+                                url: "https://cdn.datatables.net/plug-ins/1.10.22/i18n/German.json",
                             },
-                        },
-                    ],
-                    pageLength: 10,
-                    lengthMenu: [5, 10, 15, 25],
-                })
+                            columns: [
+                                { data: "ID" },
+                                { data: "Vorname" },
+                                { data: "Name" },
+                                { data: "Datum" },
+                                {
+                                    data: null,
+                                    render: function (data, type, row) {
+                                        return `<a class="btn-view" href="claim.html?id=${row.ID}"><i class="fa-solid fa-eye"></i></button>`
+                                    },
+                                },
+                            ],
+                            pageLength: 10,
+                            lengthMenu: [5, 10, 15, 25],
+                        })
+                    })
+                },
+                error: function (xhr, status, error) {
+                    console.error("Fehler beim Senden:", error)
+                },
             })
         </script>
     </body>
