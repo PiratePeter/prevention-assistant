@@ -104,9 +104,9 @@
             }
 
             #prevention-wrapper textarea[name="preventions"] {
-                border: 1px solid #ccc;
+                border: none;
                 min-height: 300px;
-                background: #e6e6e6;
+                background: #cfcfcf;
             }
 
             #prompt-container {
@@ -125,6 +125,10 @@
                 font-family: montserrat;
                 resize: none;
                 outline: none;
+            }
+
+            #preventions-prompt:disabled {
+                background: #cfcfcf;
             }
 
             #send-prevention {
@@ -255,9 +259,12 @@
                 const prompt = $("#preventions-prompt").val()
 
                 if (preventions !== "" && prompt !== "") {
-                    console.log(preventions)
-                    console.log(prompt)
-
+                    $("#preventions-prompt")
+                        .attr("readyonly", true)
+                        .attr("disabled", true)
+                    $("#send-prevention").html(
+                        "<i class='fa-solid fa-spin fa-spinner'></i>"
+                    )
                     $.ajax({
                         url: "http://localhost:5000/api/regenpreventions",
                         method: "POST",
@@ -270,6 +277,12 @@
                             console.log("Server Response:", response)
                             $("#prevention-wrapper textarea").text(
                                 response.preventions
+                            )
+                            $("#preventions-prompt")
+                                .attr("readyonly", false)
+                                .attr("disabled", false)
+                            $("#send-prevention").html(
+                                "<i class='fas fa-paper-plane'></i>"
                             )
                             $("#preventions-prompt").val("")
                         },
