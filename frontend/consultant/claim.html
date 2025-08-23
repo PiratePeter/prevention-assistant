@@ -186,12 +186,15 @@
 
         <script>
             let preventions = ""
+            const urlParams = getQueryParams()
+            const paramId = urlParams.id || 0
+
             $.ajax({
                 url: "http://localhost:5000/api/case",
                 method: "GET",
                 contentType: "application/json",
                 data: {
-                    id: id,
+                    id: paramId,
                 },
                 success: function (response) {
                     console.log("Server Response:", response)
@@ -287,6 +290,19 @@
                         },
                     })
                 }
+            }
+
+            function getQueryParams() {
+                const params = {}
+                const queryString = window.location.search.substring(1)
+                const pairs = queryString.split("&")
+                for (let i = 0; i < pairs.length; i++) {
+                    const [key, value] = pairs[i].split("=")
+                    if (key)
+                        params[decodeURIComponent(key)] =
+                            decodeURIComponent(value)
+                }
+                return params
             }
         </script>
     </body>
