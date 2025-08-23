@@ -264,14 +264,17 @@
                     $("#send-prevention").html(
                         "<i class='fa-solid fa-spin fa-spinner'></i>"
                     )
+
+                    const payload = {
+                        preventions: preventions,
+                        prompt: prompt,
+                    }
+
                     $.ajax({
                         url: "http://localhost:5000/api/regenpreventions",
                         method: "POST",
                         contentType: "application/json",
-                        data: {
-                            preventions: preventions,
-                            prompt: prompt,
-                        },
+                        data: JSON.stringify(payload),
                         success: function (response) {
                             console.log("Server Response:", response)
                             $("#prevention-wrapper textarea").text(
