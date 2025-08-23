@@ -5,23 +5,54 @@ import requests
 from flask import jsonify
 from shapely.geometry import Point
 
+from services.questionnaire_service import gen_questionaire_logic
+
 WEBGIS_URL_BASE = os.getenv("WEBGIS_URL")
+DANGER_LEVEL_MAP = {-1: "Keine Gefährdung bekannt", 1: "Restgefährdung", 2:"geringe Gefährdung", 3: "mittlere Gefährdung", 4: "erhebliche Gefährdung"}	
+
+gdf = gpd.read_parquet("data/natgefka_sygefgeb.parquet")
+if gdf.geometry.name != "geometry":
+    gdf = gdf.set_geometry("geometry")
 
 def get_risk_evaluation_logic(request):
     #TODO: get from request
-    x=2630621.0 #2622793.8220000006
-    y=1218404.0 #1166321.5309999995
+    x=2631274.50
+    y=1218223.25
+    previous_claims_description=""
 
-    max_gefstu = check_max_gefstu(2630621.0, 1218404.0)
-    data = {'max_gefstu': str(max_gefstu)}
-    # data = fetch_gis_data(x,y)
-    return jsonify(data)
 
+    max_gefstu = check_max_gefstu(x, y)
+
+    gis_data = fetch_gis_data(x,y)
+    attributes = gis_data["features"][0]["attributes"] # TODO: Catch "list index out of range"
+
+    risks = {
+        "HOCHWASSER": DANGER_LEVEL_MAP[max_gefstu],
+        "HAGEL": attributes["HAGEL_TEXT"],
+        "STURM": attributes["STURM_TEXT"],
+    }
+    questions = gen_questionaire_logic(risks, previous_claims_description)
+
+    return jsonify(questions)
+
+
+    """
+    OBERFLAECHENABFLUSS
+    OBERFLAECHENABFLUSS_TEXT_DE
+    HOCHWASSER_SEEN
+    SEEN_TEXT_DE
+    HOCHWASSER_FLIESSGEWAESSER
+    FLIESSGEWAESSER_TEXT_DE
+    HAGEL
+    HAGEL_TEXT
+    STURM
+    STURM_TEXT
+    """
 def fetch_gis_data(x,y):
     params = {
         "geometry": f"{x},{y}",
         "geometryType": "esriGeometryPoint",
-        "outFields": "OBERFLAECHENABFLUSS,HOCHWASSER_SEEN,HOCHWASSER_FLIESSGEWAESSER,HAGEL,STURM",
+        "outFields": "*",
         "returnGeometry": "false",
         "returnTrueCurves": "false",
         "f": "json"
@@ -34,9 +65,6 @@ def fetch_gis_data(x,y):
         return {"error": str(e)}
 
 def check_max_gefstu(x_coord: float, y_coord: float, crs: str = "EPSG:2056"):
-    gdf = gpd.read_parquet("data/natgefka_sygefgeb.parquet")
-    if gdf.geometry.name != "geometry":
-        gdf = gdf.set_geometry("geometry")
     point = gpd.GeoDataFrame(
         {"geometry": [Point(x_coord, y_coord)]},
         crs=crs
