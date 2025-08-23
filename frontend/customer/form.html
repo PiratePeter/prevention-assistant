@@ -414,7 +414,7 @@
                 />
                 <button
                     type="button"
-                    class="previous action-button"
+                    class="action-button"
                     onclick="saveData();"
                 >
                     Absenden
@@ -725,7 +725,7 @@
                 payload.damage_desc =
                     $("textarea[name='damage_desc']").val() || ""
 
-                // 4questions and answers
+                // questions and answers
                 payload.specific_questions = []
                 $("#question-container .question-item").each(function () {
                     const questionText = $(this).find("label").text()
