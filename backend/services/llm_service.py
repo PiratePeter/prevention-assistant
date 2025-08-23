@@ -1,8 +1,6 @@
-from dotenv import load_dotenv
 from flask import jsonify
 from google import genai
 
-load_dotenv()
 client = genai.Client()
 
 def get_llm_answer_logic(request):

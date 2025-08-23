@@ -1,12 +1,11 @@
-from dotenv import load_dotenv
-from google import genai
 import json
 
-load_dotenv()
+from google import genai
+
 client = genai.Client()
 
 
-def gen_questionaire_logic(risks: list[dict], previous_claims_description: str)-> list[str]:
+def gen_questionaire_logic(risks: dict, previous_claims_description: str)-> list[str]:
     """
     Generates a questionnaire based on the provided risks and previous claims description.
     :param risks: List of risks with their names and danger levels
@@ -36,22 +35,17 @@ def gen_questionaire_logic(risks: list[dict], previous_claims_description: str)-
         model='gemini-2.5-flash', contents=prompt
     )
 
-    response_json = response.text
+    response_text = response.text.strip()
+    if not response_text.startswith('{') or not response_text.endswith('}'):
+        response_text = response_text.replace("```json", "").replace("```", "")
 
     try:
-        json.loads(response_json)
+        response_json = json.loads(response_text)
     except json.JSONDecodeError as e:
-        raise ValueError(f"Response is not valid JSON: {response_json}") from e
-    if not response_json.startswith('[') or not response_json.endswith(']'):
+        raise ValueError(f"Response is not valid JSON: {response_text}") from e
+    if not isinstance(response_json["questions"], list):
         raise ValueError(f"Response is not a list of questions: {response_json}")
-    
-    # Parse the response as JSON
-    questions = json.loads(response.text)
-
-    if not isinstance(questions, list):
-        raise ValueError(f"Response is not a list of questions: {questions}")
-    return questions
-
+    return response_json
 
 if __name__ == "__main__":
     # Example usage
@@ -59,7 +53,7 @@ if __name__ == "__main__":
         "Hochwasser": "hohe Gefährdung",
         "Sturm": "mittlere Gefährdung",
         "Hagel": "mittlere Gefährdung",
-        "Lawine": "keine Gef\u00e4hrdung",
+        "Lawine": "keine Gefährdung",
         "(Erd-)Rutschung": "keine Gefährdung"
     }
     previous_claims_example = "Previous claims related to flooding in 2020 where the basement was affected."
