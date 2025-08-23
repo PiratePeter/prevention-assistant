@@ -17,9 +17,39 @@ source .venv/Scripts/activate
 pip install -r requirements.txt
 ```
 
+### Generate model classes
+
+```bash
+
+source .env && sqlacodegen $DATABASE_URL --outfile generated/models.py
+```
+
 ### Start local server
 
 ```bash
 
 python app.py
+```
+
+Open http://localhost:5000/
+
+## Database
+
+```bash
+
+cd database
+```
+
+### Create user and database
+
+```bash
+psql -U postgres -c "CREATE USER gvbuser WITH LOGIN;"
+psql -U postgres -c "CREATE DATABASE gvbdb OWNER gvbuser;"
+```
+
+### Init database
+
+```bash
+cd database
+psql -U gvbuser -d gvbdb -f schema.sql
 ```

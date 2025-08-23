@@ -3,9 +3,10 @@ from flask import Flask
 from flask_cors import CORS
 
 load_dotenv()
+from routes.case_routes import case_bp
 from routes.llm_routes import llm_bp
-from routes.risk_routes import risk_bp
 from routes.recommendation_routes import recommendation_bp
+from routes.risk_routes import risk_bp
 
 
 def create_app():
@@ -14,6 +15,7 @@ def create_app():
     app.register_blueprint(llm_bp)
     app.register_blueprint(risk_bp)
     app.register_blueprint(recommendation_bp)
+    app.register_blueprint(case_bp)
 
     @app.route("/")
     def index():
