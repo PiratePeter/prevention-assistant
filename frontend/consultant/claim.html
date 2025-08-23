@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>GVB Preventa</title>
+        <link rel="icon" type="image/x-icon" href="../res/favicon.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        />
+        <style>
+            @import url(https://fonts.googleapis.com/css?family=Montserrat);
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            html {
+                background: linear-gradient(#ff8f18, #ee000c);
+            }
+
+            body {
+                font-family: montserrat, arial, verdana;
+            }
+
+            #header {
+                background-color: white;
+                display: flex;
+                padding: 10px;
+            }
+
+            #tables-top,
+            #table-question-wrapper,
+            #prevention-wrapper {
+                display: flex;
+                justify-content: space-between;
+                gap: 30px;
+                margin: 50px;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                background: white;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+                margin-bottom: 50px;
+            }
+
+            th,
+            td {
+                border: 1px solid #ddd;
+                padding: 10px 14px;
+                text-align: left;
+                vertical-align: top;
+            }
+
+            th {
+                display: none;
+            }
+
+            .section-title {
+                font-size: 1.2em;
+                font-weight: bold;
+                margin-bottom: 10px;
+                color: white;
+                text-align: left;
+                width: 100%;
+            }
+
+            #table-customer-wrapper {
+                flex: 0 0 48%;
+            }
+
+            #table-building-wrapper {
+                flex: 0 0 48%;
+            }
+
+            #table-question-wrapper,
+            #prevention-wrapper {
+                display: block;
+            }
+
+            table td:first-child {
+                font-weight: bold;
+            }
+
+            #prevention-wrapper textarea {
+                border-radius: 8px;
+                margin-bottom: 10px;
+                width: 100%;
+                box-sizing: border-box;
+                font-family: montserrat;
+                font-size: 13px;
+                padding: 15px;
+                outline: none;
+            }
+
+            #prevention-wrapper textarea[name="preventions"] {
+                border: 1px solid #ccc;
+                min-height: 300px;
+                background: #e6e6e6;
+            }
+
+            #prompt-container {
+                display: flex;
+                margin-top: 5px;
+            }
+
+            #preventions-query {
+                border-top-left-radius: 5px;
+                border-bottom-left-radius: 5px;
+                border-top-right-radius: 0px;
+                border-bottom-right-radius: 0px;
+                flex: 1;
+                padding: 14px;
+                border: none;
+                font-family: montserrat;
+                resize: none;
+                outline: none;
+            }
+
+            #send-prevention {
+                border-top-left-radius: 0px;
+                border-bottom-left-radius: 0px;
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+                padding: 14px 22px;
+                border: none;
+                background: #ff8f18;
+                color: white;
+                font-weight: bold;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="header">
+            <img src="../res/logo.png" height="75px" />
+        </div>
+        <div id="tables-top">
+            <div id="table-customer-wrapper">
+                <div class="section-title">Kundendaten</div>
+                <table id="table-customer">
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="table-building-wrapper">
+                <div class="section-title">Gebäudeinformationen</div>
+                <table id="table-building">
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        <div id="table-question-wrapper">
+            <div class="section-title">Spezifische Fragen & Antworten</div>
+            <table id="table-question">
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="prevention-wrapper">
+            <div class="section-title">Präventive Masssnahmen</div>
+            <textarea name="preventions" readonly></textarea>
+            <div id="prompt-container">
+                <input
+                    id="preventions-query"
+                    type="text"
+                    placeholder="Schreibe hier deine Nachricht..."
+                >
+                </input>
+                <button id="send-prevention"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+
+        <script>
+            const data = {
+                damage: "yes",
+                damage_desc: "Wasserschaden im Keller durch Rohrbruch",
+                building_info: {
+                    facade: "Holz",
+                    basement: "Beton",
+                    roof: "Ziegel",
+                    heating: "Wärmepumpe",
+                },
+                specific_questions: [
+                    { question: "Baujahr des Gebäudes?", answer: "1998" },
+                    {
+                        question: "Hat es eine Solaranlage?",
+                        answer: "Ja, 12 kWp",
+                    },
+                    { question: "Wie viele Etagen?", answer: "3" },
+                ],
+                customer: {
+                    firstname: "Luca",
+                    lastname: "Müller",
+                    email: "luca.mueller@example.com",
+                },
+                preventions: "text",
+            }
+
+            // table 1
+            const tableCustomer = $("#table-customer tbody")
+            tableCustomer.append(
+                `<tr><td>Vorname</td><td>${data.customer.firstname}</td></tr>`
+            )
+            tableCustomer.append(
+                `<tr><td>Nachname</td><td>${data.customer.lastname}</td></tr>`
+            )
+            tableCustomer.append(
+                `<tr><td>Email</td><td>${data.customer.email}</td></tr>`
+            )
+            tableCustomer.append(
+                `<tr><td>Schadenfall</td><td>${data.damage}</td></tr>`
+            )
+            if (data.damage === "yes") {
+                tableCustomer.append(
+                    `<tr><td>Schadenfall Beschreibung</td><td>${data.damage_desc}</td></tr>`
+                )
+            }
+
+            // table 2
+            const tableBuilding = $("#table-building tbody")
+            tableBuilding.append(
+                `<tr><td>Fassade</td><td>${data.building_info.facade}</td></tr>`
+            )
+
+            tableBuilding.append(
+                `<tr><td>Kellergrube</td><td>${data.building_info.basement}</td></tr>`
+            )
+
+            tableBuilding.append(
+                `<tr><td>Dach</td><td>${data.building_info.roof}</td></tr>`
+            )
+
+            tableBuilding.append(
+                `<tr><td>Heizung</td><td>${data.building_info.heating}</td></tr>`
+            )
+
+            // table 3
+            const tableQuestion = $("#table-question tbody")
+            data.specific_questions.forEach((qa) => {
+                tableQuestion.append(
+                    `<tr><td>${qa.question}</td><td>${qa.answer}</td></tr>`
+                )
+            })
+
+            // preventions
+            const TextareaPreventions = $("#prevention-wrapper textarea").text(
+                data.preventions
+            )
+        </script>
+    </body>
+</html>

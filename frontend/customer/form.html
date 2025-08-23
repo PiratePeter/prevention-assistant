@@ -212,6 +212,7 @@
                 font-size: 14px;
                 background: white;
                 box-sizing: border-box;
+                border: 1px solid #ccc;
             }
 
             #msform select:focus {
@@ -268,7 +269,7 @@
                     <label for="damage_no" class="radio-btn">Nein</label>
                 </div>
                 <textarea
-                    name="damagedesc"
+                    name="damage_desc"
                     placeholder="Beschreiben Sie den Schaden"
                 ></textarea>
                 <br />
@@ -490,12 +491,12 @@
             // step 1: show / hide damagedec
             $("input[name='damage']").change(function () {
                 if ($(this).val() === "yes") {
-                    $("textarea[name='damagedesc']")
+                    $("textarea[name='damage_desc']")
                         .css("height", "300px")
                         .css("padding", "15px")
                         .css("opacity", "1")
                 } else {
-                    $("textarea[name='damagedesc']")
+                    $("textarea[name='damage_desc']")
                         .css("height", "0px")
                         .css("padding", "0px")
                         .css("opacity", "0")
