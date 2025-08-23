@@ -114,7 +114,7 @@
                 margin-top: 5px;
             }
 
-            #preventions-query {
+            #preventions-prompt {
                 border-top-left-radius: 5px;
                 border-bottom-left-radius: 5px;
                 border-top-right-radius: 0px;
@@ -170,91 +170,115 @@
             <textarea name="preventions" readonly></textarea>
             <div id="prompt-container">
                 <input
-                    id="preventions-query"
+                    id="preventions-prompt"
                     type="text"
                     placeholder="Schreibe hier deine Nachricht..."
-                >
-                </input>
-                <button id="send-prevention"><i class="fas fa-paper-plane"></i></button>
+                />
+                <button id="send-prevention" onclick="sendPrompt();">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
         </div>
 
         <script>
-            const data = {
-                damage: "yes",
-                damage_desc: "Wasserschaden im Keller durch Rohrbruch",
-                building_info: {
-                    facade: "Holz",
-                    basement: "Beton",
-                    roof: "Ziegel",
-                    heating: "Wärmepumpe",
+            let preventions = ""
+            $.ajax({
+                url: "http://localhost:5000/api/case",
+                method: "GET",
+                contentType: "application/json",
+                data: {
+                    id: id,
                 },
-                specific_questions: [
-                    { question: "Baujahr des Gebäudes?", answer: "1998" },
-                    {
-                        question: "Hat es eine Solaranlage?",
-                        answer: "Ja, 12 kWp",
-                    },
-                    { question: "Wie viele Etagen?", answer: "3" },
-                ],
-                customer: {
-                    firstname: "Luca",
-                    lastname: "Müller",
-                    email: "luca.mueller@example.com",
+                success: function (response) {
+                    console.log("Server Response:", response)
+                    response = JSON.parse(
+                        '{"damage":"yes","damage_desc":"Wasserschaden im Keller durch Rohrbruch","building_info":{"facade":"Holz","basement":"Beton","roof":"Ziegel","heating":"Wärmepumpe"},"specific_questions":[{"question":"Baujahr des Gebäudes?","answer":"1998"},{"question":"Hat es eine Solaranlage?","answer":"Ja, 12 kWp"},{"question":"Wie viele Etagen?","answer":"3"}],"customer":{"firstname":"Luca","lastname":"Müller","email":"luca.mueller@example.com"},"preventions":"text"}'
+                    )
+
+                    preventions = response.preventions
+
+                    // table 1
+                    const tableCustomer = $("#table-customer tbody")
+                    tableCustomer.append(
+                        `<tr><td>Vorname</td><td>${response.customer.firstname}</td></tr>`
+                    )
+                    tableCustomer.append(
+                        `<tr><td>Nachname</td><td>${response.customer.lastname}</td></tr>`
+                    )
+                    tableCustomer.append(
+                        `<tr><td>Email</td><td>${response.customer.email}</td></tr>`
+                    )
+                    tableCustomer.append(
+                        `<tr><td>Schadenfall</td><td>${response.damage}</td></tr>`
+                    )
+                    if (response.damage === "yes") {
+                        tableCustomer.append(
+                            `<tr><td>Schadenfall Beschreibung</td><td>${response.damage_desc}</td></tr>`
+                        )
+                    }
+
+                    // table 2
+                    const tableBuilding = $("#table-building tbody")
+                    tableBuilding.append(
+                        `<tr><td>Fassade</td><td>${response.building_info.facade}</td></tr>`
+                    )
+
+                    tableBuilding.append(
+                        `<tr><td>Kellergrube</td><td>${response.building_info.basement}</td></tr>`
+                    )
+
+                    tableBuilding.append(
+                        `<tr><td>Dach</td><td>${response.building_info.roof}</td></tr>`
+                    )
+
+                    tableBuilding.append(
+                        `<tr><td>Heizung</td><td>${response.building_info.heating}</td></tr>`
+                    )
+
+                    // table 3
+                    const tableQuestion = $("#table-question tbody")
+                    response.specific_questions.forEach((qa) => {
+                        tableQuestion.append(
+                            `<tr><td>${qa.question}</td><td>${qa.answer}</td></tr>`
+                        )
+                    })
+
+                    // preventions
+                    $("#prevention-wrapper textarea").text(response.preventions)
                 },
-                preventions: "text",
-            }
-
-            // table 1
-            const tableCustomer = $("#table-customer tbody")
-            tableCustomer.append(
-                `<tr><td>Vorname</td><td>${data.customer.firstname}</td></tr>`
-            )
-            tableCustomer.append(
-                `<tr><td>Nachname</td><td>${data.customer.lastname}</td></tr>`
-            )
-            tableCustomer.append(
-                `<tr><td>Email</td><td>${data.customer.email}</td></tr>`
-            )
-            tableCustomer.append(
-                `<tr><td>Schadenfall</td><td>${data.damage}</td></tr>`
-            )
-            if (data.damage === "yes") {
-                tableCustomer.append(
-                    `<tr><td>Schadenfall Beschreibung</td><td>${data.damage_desc}</td></tr>`
-                )
-            }
-
-            // table 2
-            const tableBuilding = $("#table-building tbody")
-            tableBuilding.append(
-                `<tr><td>Fassade</td><td>${data.building_info.facade}</td></tr>`
-            )
-
-            tableBuilding.append(
-                `<tr><td>Kellergrube</td><td>${data.building_info.basement}</td></tr>`
-            )
-
-            tableBuilding.append(
-                `<tr><td>Dach</td><td>${data.building_info.roof}</td></tr>`
-            )
-
-            tableBuilding.append(
-                `<tr><td>Heizung</td><td>${data.building_info.heating}</td></tr>`
-            )
-
-            // table 3
-            const tableQuestion = $("#table-question tbody")
-            data.specific_questions.forEach((qa) => {
-                tableQuestion.append(
-                    `<tr><td>${qa.question}</td><td>${qa.answer}</td></tr>`
-                )
+                error: function (xhr, status, error) {
+                    console.error("Fehler beim Senden:", error)
+                },
             })
 
-            // preventions
-            const TextareaPreventions = $("#prevention-wrapper textarea").text(
-                data.preventions
-            )
+            function sendPrompt() {
+                const prompt = $("#preventions-prompt").val()
+
+                if (preventions !== "" && prompt !== "") {
+                    console.log(preventions)
+                    console.log(prompt)
+
+                    $.ajax({
+                        url: "http://localhost:5000/api/risk",
+                        method: "POST",
+                        contentType: "application/json",
+                        data: {
+                            preventions: preventions,
+                            prompt: prompt,
+                        },
+                        success: function (response) {
+                            console.log("Server Response:", response)
+                            $("#prevention-wrapper textarea").text(
+                                response.preventions
+                            )
+                            $("#preventions-prompt").val("")
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Fehler beim Senden:", error)
+                        },
+                    })
+                }
+            }
         </script>
     </body>
 </html>
