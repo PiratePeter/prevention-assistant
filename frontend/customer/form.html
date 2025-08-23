@@ -461,7 +461,7 @@
 
                 // trigger canvas anim
                 if ($(this).parent().index() === 2) {
-                    startCanvasAnimation(5000)
+                    startCanvasAnimation()
 
                     // Step 1 Daten auslesen
                     const damage =
@@ -495,13 +495,14 @@
                     console.log(payload)
 
                     $.ajax({
-                        url: "http://localhost:5000/api/risk/",
+                        url: "http://localhost:5000/api/risk",
                         method: "POST",
                         contentType: "application/json",
                         data: JSON.stringify(payload),
                         success: function (response) {
                             console.log("Server Response:", response)
                             const container = $("#question-container")
+                            container.html("")
                             response.questions.forEach((q, index) => {
                                 const fieldHTML = `
                                     <div>
@@ -669,7 +670,7 @@
                 animationId = requestAnimationFrame(loop)
             }
 
-            function startCanvasAnimation(duration = 5000) {
+            function startCanvasAnimation() {
                 canvas.style.display = "inline"
                 canvas.width = window.innerWidth
                 canvas.height = window.innerHeight
@@ -678,7 +679,6 @@
                 radius = Math.min(canvas.width, canvas.height) / 3
                 createBalls()
                 loop()
-                if (duration > 0) setTimeout(stopCanvasAnimation, duration)
             }
 
             function stopCanvasAnimation() {
