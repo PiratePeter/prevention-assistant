@@ -7,6 +7,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        />
         <style>
             @import url(https://fonts.googleapis.com/css?family=Montserrat);
 
@@ -735,6 +739,10 @@
                         answer: answerVal || "",
                     })
                 })
+
+                $("#field-set-submit").html(
+                    "<h2 class='fs-title'>Ihre Anfrage wird verarbeitet</h2><p><i class='fa-solid fa-2xl fa-spin fa-spinner'></p>"
+                )
 
                 $.ajax({
                     url: "http://localhost:5000/api/case",
