@@ -3,6 +3,7 @@ flask-cors==6.0.1
 Flask-SQLAlchemy==3.1.1
 geopandas==1.1.1
 google-genai==1.31.0
+marshmallow==4.0.0
 pyarrow==21.0.0
 pyproj==3.7.2
 python-dotenv==1.1.1
