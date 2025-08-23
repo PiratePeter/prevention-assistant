@@ -19,6 +19,7 @@
             html {
                 min-height: 100%;
                 background: linear-gradient(#ff8f18, #ee000c);
+                background-attachment: fixed;
             }
 
             body {
@@ -376,7 +377,7 @@
             </fieldset>
 
             <!-- step 4 -->
-            <fieldset>
+            <fieldset id="field-set-submit">
                 <h2 class="fs-title">Absenden</h2>
                 <div class="select-group">
                     <label>Vorname</label>
@@ -411,7 +412,13 @@
                     class="previous action-button"
                     value="Zurück"
                 />
-                <input type="submit" class="action-button" value="Absenden" />
+                <button
+                    type="button"
+                    class="previous action-button"
+                    onclick="saveData();"
+                >
+                    Absenden
+                </button>
             </fieldset>
         </form>
 
@@ -505,11 +512,11 @@
                             console.log("Server Response:", response)
                             response.questions.forEach((q, index) => {
                                 const fieldHTML = `
-                                    <div>
-                                        <label for="answer${index}">${q}</label>
-                                        <input type="text" name="answer${index}" id="answer${index}" />
-                                    </div>
-                                    `
+                                                <div class="question-item">
+                                                    <label for="answer${index}">${q}</label>
+                                                    <input type="text" name="answer${index}" id="answer${index}" />
+                                                </div>
+                                                `
                                 container.append(fieldHTML)
                             })
                             stopCanvasAnimation()
@@ -693,6 +700,59 @@
                 centerY = canvas.height / 2
                 radius = Math.min(canvas.width, canvas.height) / 3
             })
+
+            // save data
+            function saveData() {
+                const payload = {}
+
+                // customer info
+                payload.customer = {
+                    firstname: $("input[name='customer-firstname']").val(),
+                    lastname: $("input[name='customer-name']").val(),
+                    email: $("input[name='customer-email']").val(),
+                }
+
+                // building info
+                payload.building_info = {
+                    facade: $("select[name='facade']").val(),
+                    roof: $("select[name='roof']").val(),
+                    basement: $("select[name='basement']").val(),
+                    heating: $("select[name='heating']").val(),
+                }
+
+                // damage info
+                payload.damage = $("input[name='damage']:checked").val() || ""
+                payload.damage_desc =
+                    $("textarea[name='damage_desc']").val() || ""
+
+                // 4questions and answers
+                payload.specific_questions = []
+                $("#question-container .question-item").each(function () {
+                    const questionText = $(this).find("label").text()
+                    const answerVal = $(this).find("input[type='text']").val()
+                    payload.specific_questions.push({
+                        question: questionText,
+                        answer: answerVal || "",
+                    })
+                })
+
+                $.ajax({
+                    url: "http://localhost:5000/api/case",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(payload),
+                    success: function (response) {
+                        console.log("Server Response:", response)
+
+                        $("#field-set-submit").html(
+                            "<h2 class='fs-title'>Ihre Anfrage wurde übermittel</h2><p>Sie können dieses Fenster nun schliessen.</p>"
+                        )
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Fehler beim Senden:", error)
+                    },
+                })
+            }
         </script>
     </body>
 </html>
