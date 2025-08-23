@@ -17,7 +17,7 @@
             }
 
             html {
-                height: 100%;
+                min-height: 100%;
                 background: linear-gradient(#ff8f18, #ee000c);
             }
 
@@ -223,7 +223,24 @@
             /*step 3*/
             #msform canvas {
                 width: 50%;
-                height: 0;
+                height: 50%;
+                display: none;
+            }
+
+            #question-container {
+                width: 80%;
+                margin: auto;
+            }
+
+            #question-container label {
+                font-weight: bold;
+                text-align: left;
+                display: block;
+                margin-bottom: 15px;
+            }
+
+            #question-container input {
+                margin-bottom: 30px !important;
             }
 
             /*step 4*/
@@ -342,9 +359,8 @@
             <!-- step 3 -->
             <fieldset>
                 <h2 class="fs-title">Spezifische Fragen</h2>
-                <div>
-                    <canvas></canvas>
-                </div>
+                <canvas></canvas>
+                <div id="question-container"></div>
                 <input
                     type="button"
                     name="previous"
@@ -446,6 +462,61 @@
                 // trigger canvas anim
                 if ($(this).parent().index() === 2) {
                     startCanvasAnimation(5000)
+
+                    // Step 1 Daten auslesen
+                    const damage =
+                        $("input[name='damage']:checked").val() || "no"
+                    const damage_desc =
+                        $("textarea[name='damage_desc']").val() || ""
+                    const facade = $("select[name='facade']").val() || ""
+                    const roof = $("select[name='roof']").val() || ""
+                    const basement = $("select[name='basement']").val() || ""
+                    const heating = $("select[name='heating']").val() || ""
+
+                    const urlParams = getQueryParams()
+                    const lon = urlParams.lon || null
+                    const lat = urlParams.lat || null
+
+                    const payload = {
+                        damage: damage,
+                        damage_desc: damage_desc,
+                        building_info: {
+                            facade: facade,
+                            roof: roof,
+                            basement: basement,
+                            heating: heating,
+                        },
+                        location: {
+                            lon: lon,
+                            lat: lat,
+                        },
+                    }
+
+                    console.log(payload)
+
+                    $.ajax({
+                        url: "http://localhost:5000/api/risk/",
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(payload),
+                        success: function (response) {
+                            console.log("Server Response:", response)
+                            const container = $("#question-container")
+                            response.questions.forEach((q, index) => {
+                                const fieldHTML = `
+                                    <div>
+                                        <label for="answer${index}">${q}</label>
+                                        <input type="text" name="answer${index}" id="answer${index}" />
+                                    </div>
+                                    `
+                                container.append(fieldHTML)
+                            })
+                            stopCanvasAnimation()
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Fehler beim Senden:", error)
+                        },
+                    })
                 }
             })
 
@@ -502,6 +573,19 @@
                         .css("opacity", "0")
                 }
             })
+
+            function getQueryParams() {
+                const params = {}
+                const queryString = window.location.search.substring(1)
+                const pairs = queryString.split("&")
+                for (let i = 0; i < pairs.length; i++) {
+                    const [key, value] = pairs[i].split("=")
+                    if (key)
+                        params[decodeURIComponent(key)] =
+                            decodeURIComponent(value)
+                }
+                return params
+            }
 
             // canvas anim
             var canvas = document.querySelector("canvas")
@@ -586,7 +670,7 @@
             }
 
             function startCanvasAnimation(duration = 5000) {
-                canvas.style.height = "50%"
+                canvas.style.display = "inline"
                 canvas.width = window.innerWidth
                 canvas.height = window.innerHeight
                 centerX = canvas.width / 2
@@ -599,7 +683,7 @@
 
             function stopCanvasAnimation() {
                 cancelAnimationFrame(animationId)
-                canvas.style.height = "0"
+                canvas.style.display = "none"
             }
 
             window.addEventListener("resize", function () {
