@@ -3,6 +3,7 @@ import os
 import geopandas as gpd
 import requests
 from flask import jsonify
+from pyproj import Transformer
 from shapely.geometry import Point
 
 from services.questionnaire_service import gen_questionaire_logic
@@ -15,24 +16,35 @@ if gdf.geometry.name != "geometry":
     gdf = gdf.set_geometry("geometry")
 
 def get_risk_evaluation_logic(request):
-    #TODO: get from request
-    x=2631274.50
-    y=1218223.25
-    previous_claims_description=""
+    data = request.json
+    # building_info = data.get('building_info') #TODO: add to llm api call
+    previous_claims_description = data.get('damage_desc')
+    lon = data.get('location').get('lon')
+    lat = data.get('location').get('lat')
 
+    transformer = Transformer.from_crs("epsg:4326", "epsg:2056", always_xy=True)
+    x, y = transformer.transform(lon, lat)
 
     max_gefstu = check_max_gefstu(x, y)
 
     gis_data = fetch_gis_data(x,y)
-    attributes = gis_data["features"][0]["attributes"] # TODO: Catch "list index out of range"
 
+    hail_risk = DANGER_LEVEL_MAP[-1]
+    storm_risk = DANGER_LEVEL_MAP[-1]
+
+    if 0 < len(gis_data["features"]):
+        attributes = gis_data["features"][0]["attributes"]
+        hail_risk = attributes["HAGEL_TEXT"]
+        storm_risk = attributes["STURM_TEXT"]
+    
     risks = {
         "HOCHWASSER": DANGER_LEVEL_MAP[max_gefstu],
-        "HAGEL": attributes["HAGEL_TEXT"],
-        "STURM": attributes["STURM_TEXT"],
+        "HAGEL": hail_risk,
+        "STURM": storm_risk,
     }
-    questions = gen_questionaire_logic(risks, previous_claims_description)
 
+    questions = gen_questionaire_logic(risks, previous_claims_description)
+    
     return jsonify(questions)
 
 

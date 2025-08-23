@@ -3,8 +3,7 @@ from google import genai
 
 client = genai.Client()
 
-def get_llm_answer_logic(request):
-    # ... = request.args.get('...')
+def get_llm_answer_logic(_):
     prompt = 'Explain how AI works in a few words'
     response = client.models.generate_content(
         model='gemini-2.5-flash', contents=prompt
