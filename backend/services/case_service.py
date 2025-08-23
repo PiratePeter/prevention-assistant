@@ -4,6 +4,8 @@ from flask import jsonify
 from generated.models import PreventionCase, PreventionQuestion
 from persistence.database import get_session
 
+from services.recommendation_service import gen_recommendation_logic
+
 
 def load_cases_logic(_):
     session = get_session()
@@ -66,7 +68,7 @@ def load_case_logic(request):
             "lastname":db_case.lastname,
             "email":db_case.email
         },
-        "preventions":"text" #TODO get preventions
+        "preventions":db_case.preventions
     }
 
     return jsonify(response), 200
@@ -88,6 +90,8 @@ def save_case_logic(request):
     if not questions or not isinstance(questions, list):
         return jsonify({'error': 'Invalid payload'}), 400
 
+    recommendation = gen_recommendation_logic(data)
+
     db_case = PreventionCase(
         creation_time = timestamp,
         firstname=firstname, 
@@ -98,6 +102,7 @@ def save_case_logic(request):
         basement=basement,
         heating=heating,
         damage_desc=damage_desc,
+        preventions=recommendation["recommendation"]
     )
     session.add(db_case)
     session.commit()

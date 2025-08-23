@@ -25,6 +25,7 @@ class PreventionCase(Base):
     firstname: Mapped[Optional[str]] = mapped_column(Text)
     lastname: Mapped[Optional[str]] = mapped_column(Text)
     email: Mapped[Optional[str]] = mapped_column(Text)
+    preventions: Mapped[Optional[str]] = mapped_column(Text)
 
     prevention_question: Mapped[list['PreventionQuestion']] = relationship('PreventionQuestion', back_populates='prevention_case')
 

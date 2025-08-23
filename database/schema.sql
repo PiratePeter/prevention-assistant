@@ -1,4 +1,3 @@
-ALTER TABLE IF EXISTS prevention_question DROP CONSTRAINT fk_prevention_case;
 DROP TABLE IF EXISTS prevention_question CASCADE;
 DROP TABLE IF EXISTS prevention_case CASCADE;
 
@@ -13,7 +12,8 @@ CREATE TABLE prevention_case (
     heating TEXT,
     firstname TEXT,
     lastname TEXT,
-    email TEXT
+    email TEXT,
+    preventions TEXT
 );
 
 CREATE TABLE prevention_question (
