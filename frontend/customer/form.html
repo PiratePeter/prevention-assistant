@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>GVB Preventa</title>
+        <link rel="icon" type="image/x-icon" href="../res/favicon.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js"></script>
+        <style>
+            @import url(https://fonts.googleapis.com/css?family=Montserrat);
+
+            /*basic stuff*/
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            html {
+                height: 100%;
+                background: linear-gradient(#ff8f18, #ee000c);
+            }
+
+            body {
+                font-family: montserrat, arial, verdana;
+            }
+
+            #header {
+                background-color: white;
+                display: flex;
+            }
+
+            /*form*/
+            #msform {
+                width: 70%;
+                margin: 50px auto;
+                text-align: center;
+                position: relative;
+            }
+
+            #msform .action-button {
+                width: 100px;
+                background: #771511;
+                font-weight: bold;
+                color: white;
+                border: 0 none;
+                border-radius: 1px;
+                cursor: pointer;
+                padding: 10px;
+                margin: 10px 5px;
+                font-size: 14px;
+                text-decoration: none;
+            }
+
+            #msform .action-button:hover,
+            #msform .action-button:focus {
+                box-shadow: 1px 1px 5px #771511;
+            }
+
+            #progressbar {
+                margin-bottom: 50px;
+                overflow: hidden;
+                counter-reset: step;
+            }
+
+            #progressbar li {
+                list-style-type: none;
+                color: white;
+                text-transform: uppercase;
+                font-size: 11px;
+                width: 25%;
+                float: left;
+                position: relative;
+            }
+
+            #progressbar li:before {
+                content: counter(step);
+                counter-increment: step;
+                width: 20px;
+                line-height: 20px;
+                display: block;
+                font-size: 10px;
+                color: #333;
+                background: white;
+                border-radius: 3px;
+                margin: 0 auto 5px auto;
+            }
+
+            #progressbar li:after {
+                content: "";
+                width: 100%;
+                height: 2px;
+                background: white;
+                position: absolute;
+                left: -50%;
+                top: 9px;
+                z-index: -1;
+            }
+
+            #progressbar li:first-child:after {
+                content: none;
+            }
+
+            #progressbar li.active:before,
+            #progressbar li.active:after {
+                background: #771511;
+                color: white;
+            }
+
+            .fs-title {
+                font-size: 15px;
+                text-transform: uppercase;
+                margin-bottom: 30px;
+            }
+
+            .fs-subtitle {
+                font-weight: normal;
+                font-size: 13px;
+                color: #666;
+                margin-bottom: 20px;
+            }
+
+            #msform fieldset {
+                background: white;
+                border: 0 none;
+                border-radius: 3px;
+                box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+                padding: 50px 20px 30px 20px;
+                box-sizing: border-box;
+                width: 80%;
+                margin: 0 10%;
+                position: relative;
+            }
+
+            #msform fieldset:not(:first-of-type) {
+                display: none;
+            }
+
+            /*step 1*/
+            #msform .radio-group {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+                margin-bottom: 15px;
+            }
+
+            #msform .radio-group input[type="radio"] {
+                display: none;
+            }
+
+            #msform .radio-btn {
+                padding: 10px 25px;
+                border: 2px solid #ff8f18;
+                border-radius: 5px;
+                cursor: pointer;
+                background: white;
+                color: #ff8f18;
+                font-weight: bold;
+                transition: all 0.2s ease-in-out;
+            }
+
+            #msform .radio-btn:hover {
+                box-shadow: 1px 1px 5px #e68013ff;
+            }
+
+            #msform .radio-group input[type="radio"]:checked + .radio-btn {
+                background: #ff8f18;
+                color: white;
+            }
+
+            #msform input,
+            #msform textarea {
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                margin-bottom: 10px;
+                width: 100%;
+                box-sizing: border-box;
+                font-family: montserrat;
+                font-size: 13px;
+            }
+
+            #msform input {
+                padding: 15px;
+            }
+
+            #msform textarea {
+                padding: 0px;
+                opacity: 0;
+                transition-duration: 1s;
+                height: 0px;
+            }
+
+            /*step 2*/
+            #msform .select-group {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin: 0 10% 20px 10%;
+            }
+
+            #msform .select-group label {
+                width: 30%;
+                text-align: left;
+                font-weight: bold;
+            }
+
+            #msform .select-group select {
+                width: 65%;
+                padding: 10px 12px;
+                border: 2px solid black;
+                border-radius: 5px;
+                font-size: 14px;
+                background: white;
+                box-sizing: border-box;
+            }
+
+            #msform select:focus {
+                outline: none;
+                border-color: black;
+            }
+
+            /*step 3*/
+            #msform canvas {
+                width: 50%;
+                height: 0;
+            }
+
+            /*step 4*/
+            #text-check-info {
+                margin: 30px 0 15px 0;
+            }
+
+            #msform input {
+                margin: 0;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="header">
+            <img src="../res/logo.png" height="75px" />
+        </div>
+        <form id="msform">
+            <ul id="progressbar">
+                <li class="active">Schaden</li>
+                <li>Gebäude</li>
+                <li>Spezifisch</li>
+                <li>Absenden</li>
+            </ul>
+
+            <!-- step 1 -->
+            <fieldset>
+                <h2 class="fs-title">Hatten Sie bereits einen Schadensfall?</h2>
+                <div class="radio-group">
+                    <input
+                        type="radio"
+                        name="damage"
+                        id="damage_yes"
+                        value="yes"
+                    />
+                    <label for="damage_yes" class="radio-btn">Ja</label>
+                    <input
+                        type="radio"
+                        name="damage"
+                        id="damage_no"
+                        value="no"
+                    />
+                    <label for="damage_no" class="radio-btn">Nein</label>
+                </div>
+                <textarea
+                    name="damagedesc"
+                    placeholder="Beschreiben Sie den Schaden"
+                ></textarea>
+                <br />
+
+                <a
+                    type="button"
+                    href="index.html"
+                    class="previous action-button"
+                    >Zurück</a
+                >
+                <input
+                    type="button"
+                    name="next"
+                    class="next action-button"
+                    value="Weiter"
+                />
+            </fieldset>
+
+            <!-- step 2 -->
+            <fieldset>
+                <h2 class="fs-title">Gebäudeinformationen</h2>
+                <div class="select-group">
+                    <label>Fassade</label>
+                    <select name="facade">
+                        <option value="">Bitte wählen</option>
+                        <option>Holz</option>
+                        <option>Putz</option>
+                        <option>Stein</option>
+                    </select>
+                </div>
+                <div class="select-group">
+                    <label>Dach</label>
+                    <select name="roof">
+                        <option value="">Bitte wählen</option>
+                        <option>Dachfenster vorhanden</option>
+                        <option>Keine Dachfenster</option>
+                    </select>
+                </div>
+                <div class="select-group">
+                    <label>Keller</label>
+                    <select name="basement">
+                        <option value="">Bitte wählen</option>
+                        <option>Kellergrube vorhanden</option>
+                        <option>Kein Keller</option>
+                    </select>
+                </div>
+                <div class="select-group">
+                    <label>Heizung / Ofen</label>
+                    <select name="heating">
+                        <option value="">Bitte wählen</option>
+                        <option>Holzofen</option>
+                        <option>Öl / Gas</option>
+                        <option>Elektro</option>
+                    </select>
+                </div>
+                <input
+                    type="button"
+                    name="previous"
+                    class="previous action-button"
+                    value="Zurück"
+                />
+                <input
+                    type="button"
+                    name="next"
+                    class="next action-button"
+                    value="Weiter"
+                />
+            </fieldset>
+
+            <!-- step 3 -->
+            <fieldset>
+                <h2 class="fs-title">Spezifische Fragen</h2>
+                <div>
+                    <canvas></canvas>
+                </div>
+                <input
+                    type="button"
+                    name="previous"
+                    class="previous action-button"
+                    value="Zurück"
+                />
+                <input
+                    type="button"
+                    name="next"
+                    class="next action-button"
+                    value="Weiter"
+                />
+            </fieldset>
+
+            <!-- step 4 -->
+            <fieldset>
+                <h2 class="fs-title">Absenden</h2>
+                <div class="select-group">
+                    <label>Vorname</label>
+                    <input
+                        type="text"
+                        name="customer-firstname"
+                        placeholder="Vorname"
+                    />
+                </div>
+                <div class="select-group">
+                    <label>Nachname</label>
+                    <input
+                        type="text"
+                        name="customer-name"
+                        placeholder="Nachname"
+                    />
+                </div>
+                <div class="select-group">
+                    <label>E-Mail</label>
+                    <input
+                        type="email"
+                        name="customer-email"
+                        placeholder="E-Mail"
+                    />
+                </div>
+                <p id="text-check-info">
+                    Überprüfen Sie alle Angaben und senden Sie das Formular ab.
+                </p>
+                <input
+                    type="button"
+                    name="previous"
+                    class="previous action-button"
+                    value="Zurück"
+                />
+                <input type="submit" class="action-button" value="Absenden" />
+            </fieldset>
+        </form>
+
+        <script>
+            // multi-step navigation
+            var current_fs, next_fs, previous_fs
+            var animating = false
+
+            $(".next").click(function () {
+                if (animating) return false
+                animating = true
+
+                current_fs = $(this).parent()
+                next_fs = $(this).parent().next()
+
+                $("#progressbar li")
+                    .eq($("fieldset").index(next_fs))
+                    .addClass("active")
+
+                next_fs.show()
+                current_fs.animate(
+                    {
+                        opacity: 0,
+                    },
+                    {
+                        step: function (now) {
+                            scale = 1 - (1 - now) * 0.2
+                            left = now * 50 + "%"
+                            opacity = 1 - now
+                            current_fs.css({
+                                transform: "scale(" + scale + ")",
+                                position: "absolute",
+                            })
+                            next_fs.css({
+                                left: left,
+                                opacity: opacity,
+                            })
+                        },
+                        duration: 500,
+                        complete: function () {
+                            current_fs.hide()
+                            animating = false
+                        },
+                        easing: "easeInOutBack",
+                    }
+                )
+
+                // trigger canvas anim
+                if ($(this).parent().index() === 2) {
+                    startCanvasAnimation(5000)
+                }
+            })
+
+            $(".previous").click(function () {
+                if (animating) return false
+                animating = true
+
+                current_fs = $(this).parent()
+                previous_fs = $(this).parent().prev()
+
+                $("#progressbar li")
+                    .eq($("fieldset").index(current_fs))
+                    .removeClass("active")
+
+                previous_fs.show()
+                current_fs.animate(
+                    {
+                        opacity: 0,
+                    },
+                    {
+                        step: function (now) {
+                            scale = 0.8 + (1 - now) * 0.2
+                            left = (1 - now) * 50 + "%"
+                            opacity = 1 - now
+                            current_fs.css({
+                                left: left,
+                            })
+                            previous_fs.css({
+                                transform: "scale(" + scale + ")",
+                                opacity: opacity,
+                            })
+                        },
+                        duration: 500,
+                        complete: function () {
+                            current_fs.hide()
+                            animating = false
+                        },
+                        easing: "easeInOutBack",
+                    }
+                )
+            })
+
+            // step 1: show / hide damagedec
+            $("input[name='damage']").change(function () {
+                if ($(this).val() === "yes") {
+                    $("textarea[name='damagedesc']")
+                        .css("height", "300px")
+                        .css("padding", "15px")
+                        .css("opacity", "1")
+                } else {
+                    $("textarea[name='damagedesc']")
+                        .css("height", "0px")
+                        .css("padding", "0px")
+                        .css("opacity", "0")
+                }
+            })
+
+            // canvas anim
+            var canvas = document.querySelector("canvas")
+            var ctx = canvas.getContext("2d")
+            var TAU = 2 * Math.PI
+            var balls = []
+            var centerX = canvas.width / 2
+            var centerY = canvas.height / 2
+            var radius = Math.min(window.innerWidth, window.innerHeight) / 3
+            var animationId
+
+            function Ball(x, y, r) {
+                this.x = x
+                this.y = y
+                this.vel = {
+                    x: Math.random() * 2 - 1,
+                    y: Math.random() * 2 - 1,
+                }
+                this.radius = r || 8
+                this.update = function () {
+                    this.x += this.vel.x
+                    this.y += this.vel.y
+                    let dx = this.x - centerX
+                    let dy = this.y - centerY
+                    if (Math.sqrt(dx * dx + dy * dy) > radius) {
+                        let angle = Math.atan2(dy, dx)
+                        this.x = centerX + radius * Math.cos(angle)
+                        this.y = centerY + radius * Math.sin(angle)
+                        this.vel.x *= -1
+                        this.vel.y *= -1
+                    }
+                }
+                this.draw = function () {
+                    ctx.beginPath()
+                    ctx.fillStyle = "#771511"
+                    ctx.globalAlpha = 0.8
+                    ctx.arc(this.x, this.y, this.radius, 0, TAU)
+                    ctx.fill()
+                }
+            }
+
+            function createBalls() {
+                balls = []
+                for (var i = 0; i < 50; i++) {
+                    let angle = Math.random() * TAU
+                    let r = Math.sqrt(Math.random()) * radius
+                    let x = centerX + r * Math.cos(angle)
+                    let y = centerY + r * Math.sin(angle)
+                    balls.push(new Ball(x, y, 8 + Math.random() * 5))
+                }
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height)
+                ctx.fillStyle = "#ffffff"
+                ctx.fillRect(0, 0, canvas.width, canvas.height)
+                for (var i = 0; i < balls.length; i++) {
+                    var b1 = balls[i]
+                    b1.draw()
+                    for (var j = i + 1; j < balls.length; j++) {
+                        var b2 = balls[j]
+                        var dx = b1.x - b2.x
+                        var dy = b1.y - b2.y
+                        var dist = Math.sqrt(dx * dx + dy * dy)
+                        if (dist < 120) {
+                            ctx.beginPath()
+                            ctx.strokeStyle = "#ff8f18"
+                            ctx.globalAlpha = 1 - dist / 200
+                            ctx.lineWidth = 5
+                            ctx.moveTo(b1.x, b1.y)
+                            ctx.lineTo(b2.x, b2.y)
+                            ctx.stroke()
+                        }
+                    }
+                }
+            }
+
+            function loop() {
+                balls.forEach((b) => b.update())
+                draw()
+                animationId = requestAnimationFrame(loop)
+            }
+
+            function startCanvasAnimation(duration = 5000) {
+                canvas.style.height = "50%"
+                canvas.width = window.innerWidth
+                canvas.height = window.innerHeight
+                centerX = canvas.width / 2
+                centerY = canvas.height / 2
+                radius = Math.min(canvas.width, canvas.height) / 3
+                createBalls()
+                loop()
+                if (duration > 0) setTimeout(stopCanvasAnimation, duration)
+            }
+
+            function stopCanvasAnimation() {
+                cancelAnimationFrame(animationId)
+                canvas.style.height = "0"
+            }
+
+            window.addEventListener("resize", function () {
+                canvas.width = window.innerWidth
+                canvas.height = window.innerHeight
+                centerX = canvas.width / 2
+                centerY = canvas.height / 2
+                radius = Math.min(canvas.width, canvas.height) / 3
+            })
+        </script>
+    </body>
+</html>
