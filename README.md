@@ -33,6 +33,27 @@ python app.py
 
 Open http://localhost:5000/
 
+### Format code
+
+```bash
+black .
+...
+```
+
+### Lint code
+
+```bash
+
+pylint .
+```
+
+### Execute tests
+
+```bash
+
+pytest
+```
+
 ## Database
 
 ```bash

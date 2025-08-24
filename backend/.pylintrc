@@ -1,0 +1,11 @@
+[MASTER]
+ignore=.venv,generated
+
+[MESSAGES CONTROL]
+
+# Disable the message, report, category or checker with the given id(s).
+disable=
+      invalid-name, # C0103
+      C0114,  # Missing module docstring
+      C0115,  # Missing class docstring
+      C0116,  # Missing function or method docstring
