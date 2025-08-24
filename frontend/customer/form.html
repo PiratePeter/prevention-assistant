@@ -1,771 +1,703 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>GVB Preventa</title>
-        <link rel="icon" type="image/x-icon" href="../res/favicon.png" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js"></script>
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        />
-        <style>
-            @import url(https://fonts.googleapis.com/css?family=Montserrat);
 
-            /*basic stuff*/
-            * {
-                margin: 0;
-                padding: 0;
-            }
+<head>
+    <meta charset="utf-8" />
+    <title>GVB Preventa</title>
+    <link rel="icon" type="image/x-icon" href="../res/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Montserrat);
 
-            html {
-                min-height: 100%;
-                background: linear-gradient(#ff8f18, #ee000c);
-                background-attachment: fixed;
-            }
+        /*basic stuff*/
+        * {
+            margin: 0;
+            padding: 0;
+        }
 
-            body {
-                font-family: montserrat, arial, verdana;
-            }
+        html {
+            min-height: 100%;
+            background: linear-gradient(#ff8f18, #ee000c);
+            background-attachment: fixed;
+        }
 
-            #header {
-                background-color: white;
-                display: flex;
-            }
+        body {
+            font-family: montserrat, arial, verdana;
+        }
 
-            /*form*/
-            #msform {
-                width: 70%;
-                margin: 50px auto;
-                text-align: center;
-                position: relative;
-            }
+        #header {
+            background-color: white;
+            display: flex;
+        }
 
-            #msform .action-button {
-                width: 100px;
-                background: #771511;
-                font-weight: bold;
-                color: white;
-                border: 0 none;
-                border-radius: 1px;
-                cursor: pointer;
-                padding: 10px;
-                margin: 10px 5px;
-                font-size: 14px;
-                text-decoration: none;
-            }
+        /*form*/
+        #msform {
+            width: 70%;
+            margin: 50px auto;
+            text-align: center;
+            position: relative;
+        }
 
-            #msform .action-button:hover,
-            #msform .action-button:focus {
-                box-shadow: 1px 1px 5px #771511;
-            }
+        #msform .action-button {
+            width: 100px;
+            background: #771511;
+            font-weight: bold;
+            color: white;
+            border: 0 none;
+            border-radius: 1px;
+            cursor: pointer;
+            padding: 10px;
+            margin: 10px 5px;
+            font-size: 14px;
+            text-decoration: none;
+        }
 
-            #progressbar {
-                margin-bottom: 50px;
-                overflow: hidden;
-                counter-reset: step;
-            }
+        #msform .action-button:hover,
+        #msform .action-button:focus {
+            box-shadow: 1px 1px 5px #771511;
+        }
 
-            #progressbar li {
-                list-style-type: none;
-                color: white;
-                text-transform: uppercase;
-                font-size: 11px;
-                width: 25%;
-                float: left;
-                position: relative;
-            }
+        #progressbar {
+            margin-bottom: 50px;
+            overflow: hidden;
+            counter-reset: step;
+        }
 
-            #progressbar li:before {
-                content: counter(step);
-                counter-increment: step;
-                width: 20px;
-                line-height: 20px;
-                display: block;
-                font-size: 10px;
-                color: #333;
-                background: white;
-                border-radius: 3px;
-                margin: 0 auto 5px auto;
-            }
+        #progressbar li {
+            list-style-type: none;
+            color: white;
+            text-transform: uppercase;
+            font-size: 11px;
+            width: 25%;
+            float: left;
+            position: relative;
+        }
 
-            #progressbar li:after {
-                content: "";
-                width: 100%;
-                height: 2px;
-                background: white;
-                position: absolute;
-                left: -50%;
-                top: 9px;
-                z-index: -1;
-            }
+        #progressbar li:before {
+            content: counter(step);
+            counter-increment: step;
+            width: 20px;
+            line-height: 20px;
+            display: block;
+            font-size: 10px;
+            color: #333;
+            background: white;
+            border-radius: 3px;
+            margin: 0 auto 5px auto;
+        }
 
-            #progressbar li:first-child:after {
-                content: none;
-            }
+        #progressbar li:after {
+            content: "";
+            width: 100%;
+            height: 2px;
+            background: white;
+            position: absolute;
+            left: -50%;
+            top: 9px;
+            z-index: -1;
+        }
 
-            #progressbar li.active:before,
-            #progressbar li.active:after {
-                background: #771511;
-                color: white;
-            }
+        #progressbar li:first-child:after {
+            content: none;
+        }
 
-            .fs-title {
-                font-size: 15px;
-                text-transform: uppercase;
-                margin-bottom: 30px;
-            }
+        #progressbar li.active:before,
+        #progressbar li.active:after {
+            background: #771511;
+            color: white;
+        }
 
-            .fs-subtitle {
-                font-weight: normal;
-                font-size: 13px;
-                color: #666;
-                margin-bottom: 20px;
-            }
+        .fs-title {
+            font-size: 15px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
 
-            #msform fieldset {
-                background: white;
-                border: 0 none;
-                border-radius: 3px;
-                box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
-                padding: 50px 20px 30px 20px;
-                box-sizing: border-box;
-                width: 80%;
-                margin: 0 10%;
-                position: relative;
-            }
+        .fs-subtitle {
+            font-weight: normal;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 20px;
+        }
 
-            #msform fieldset:not(:first-of-type) {
-                display: none;
-            }
+        #msform fieldset {
+            background: white;
+            border: 0 none;
+            border-radius: 3px;
+            box-shadow: 0 0 15px 1px rgba(0, 0, 0, 0.4);
+            padding: 50px 20px 30px 20px;
+            box-sizing: border-box;
+            width: 80%;
+            margin: 0 10%;
+            position: relative;
+        }
 
-            /*step 1*/
-            #msform .radio-group {
-                display: flex;
-                justify-content: center;
-                gap: 20px;
-                margin-bottom: 15px;
-            }
+        #msform fieldset:not(:first-of-type) {
+            display: none;
+        }
 
-            #msform .radio-group input[type="radio"] {
-                display: none;
-            }
+        /*step 1*/
+        #msform .radio-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
 
-            #msform .radio-btn {
-                padding: 10px 25px;
-                border: 2px solid #ff8f18;
-                border-radius: 5px;
-                cursor: pointer;
-                background: white;
-                color: #ff8f18;
-                font-weight: bold;
-                transition: all 0.2s ease-in-out;
-            }
+        #msform .radio-group input[type="radio"] {
+            display: none;
+        }
 
-            #msform .radio-btn:hover {
-                box-shadow: 1px 1px 5px #e68013ff;
-            }
+        #msform .radio-btn {
+            padding: 10px 25px;
+            border: 2px solid #ff8f18;
+            border-radius: 5px;
+            cursor: pointer;
+            background: white;
+            color: #ff8f18;
+            font-weight: bold;
+            transition: all 0.2s ease-in-out;
+        }
 
-            #msform .radio-group input[type="radio"]:checked + .radio-btn {
-                background: #ff8f18;
-                color: white;
-            }
+        #msform .radio-btn:hover {
+            box-shadow: 1px 1px 5px #e68013ff;
+        }
 
-            #msform input,
-            #msform textarea {
-                border: 1px solid #ccc;
-                border-radius: 3px;
-                margin-bottom: 10px;
-                width: 100%;
-                box-sizing: border-box;
-                font-family: montserrat;
-                font-size: 13px;
-            }
+        #msform .radio-group input[type="radio"]:checked+.radio-btn {
+            background: #ff8f18;
+            color: white;
+        }
 
-            #msform input {
-                padding: 15px;
-            }
+        #msform input,
+        #msform textarea {
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            font-family: montserrat;
+            font-size: 13px;
+        }
 
-            #msform textarea {
-                padding: 0px;
-                opacity: 0;
-                transition-duration: 1s;
-                height: 0px;
-            }
+        #msform input {
+            padding: 15px;
+        }
 
-            /*step 2*/
-            #msform .select-group {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin: 0 10% 20px 10%;
-            }
+        #msform textarea {
+            padding: 0px;
+            opacity: 0;
+            transition-duration: 1s;
+            height: 0px;
+        }
 
-            #msform .select-group label {
-                width: 30%;
-                text-align: left;
-                font-weight: bold;
-            }
+        /*step 2*/
+        #msform .select-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0 10% 20px 10%;
+        }
 
-            #msform .select-group select {
-                width: 65%;
-                padding: 10px 12px;
-                border: 2px solid black;
-                border-radius: 5px;
-                font-size: 14px;
-                background: white;
-                box-sizing: border-box;
-                border: 1px solid #ccc;
-            }
+        #msform .select-group label {
+            width: 30%;
+            text-align: left;
+            font-weight: bold;
+        }
 
-            #msform select:focus {
-                outline: none;
-                border-color: black;
-            }
+        #msform .select-group select {
+            width: 65%;
+            padding: 10px 12px;
+            border: 2px solid black;
+            border-radius: 5px;
+            font-size: 14px;
+            background: white;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+        }
 
-            /*step 3*/
-            #msform canvas {
-                width: 50%;
-                height: 50%;
-                display: none;
-            }
+        #msform select:focus {
+            outline: none;
+            border-color: black;
+        }
 
-            #question-container {
-                width: 80%;
-                margin: auto;
-            }
+        /*step 3*/
+        #msform canvas {
+            width: 50%;
+            height: 50%;
+            display: none;
+        }
 
-            #question-container label {
-                font-weight: bold;
-                text-align: left;
-                display: block;
-                margin-bottom: 15px;
-            }
+        #question-container {
+            width: 80%;
+            margin: auto;
+        }
 
-            #question-container input {
-                margin-bottom: 30px !important;
-            }
+        #question-container label {
+            font-weight: bold;
+            text-align: left;
+            display: block;
+            margin-bottom: 15px;
+        }
 
-            /*step 4*/
-            #text-check-info {
-                margin: 30px 0 15px 0;
-            }
+        #question-container input {
+            margin-bottom: 30px !important;
+        }
 
-            #msform input {
-                margin: 0;
-            }
-        </style>
-    </head>
+        /*step 4*/
+        #text-check-info {
+            margin: 30px 0 15px 0;
+        }
 
-    <body>
-        <div id="header">
-            <img src="../res/logo.png" height="75px" />
-        </div>
-        <form id="msform">
-            <ul id="progressbar">
-                <li class="active">Schaden</li>
-                <li>Gebäude</li>
-                <li>Spezifisch</li>
-                <li>Absenden</li>
-            </ul>
+        #msform input {
+            margin: 0;
+        }
 
-            <!-- step 1 -->
-            <fieldset>
-                <h2 class="fs-title">Hatten Sie bereits einen Schadensfall?</h2>
-                <div class="radio-group">
-                    <input
-                        type="radio"
-                        name="damage"
-                        id="damage_yes"
-                        value="yes"
-                    />
-                    <label for="damage_yes" class="radio-btn">Ja</label>
-                    <input
-                        type="radio"
-                        name="damage"
-                        id="damage_no"
-                        value="no"
-                    />
-                    <label for="damage_no" class="radio-btn">Nein</label>
-                </div>
-                <textarea
-                    name="damage_desc"
-                    placeholder="Beschreiben Sie den Schaden"
-                >
-Beim letzten Hochwasser ist Wasser in meinen Keller eingedrungen.</textarea
-                >
-                <br />
+    </style>
+</head>
 
-                <a
-                    type="button"
-                    href="index.html"
-                    class="previous action-button"
-                    >Zurück</a
-                >
-                <input
-                    type="button"
-                    name="next"
-                    class="next action-button"
-                    value="Weiter"
-                />
-            </fieldset>
+<body>
+    <div id="header">
+        <img src="../res/logo.png" height="75px" />
+    </div>
+    <form id="msform">
+        <ul id="progressbar">
+            <li class="active">Schaden</li>
+            <li>Gebäude</li>
+            <li>Spezifisch</li>
+            <li>Absenden</li>
+        </ul>
 
-            <!-- step 2 -->
-            <fieldset>
-                <h2 class="fs-title">Gebäudeinformationen</h2>
-                <div class="select-group">
-                    <label>Fassade</label>
-                    <select name="facade">
-                        <option value="">Bitte wählen</option>
-                        <option>Holz</option>
-                        <option selected>Putz</option>
-                        <option>Stein</option>
-                    </select>
-                </div>
-                <div class="select-group">
-                    <label>Dachfenster</label>
-                    <select name="roof">
-                        <option value="">Bitte wählen</option>
-                        <option selected>Dachfenster vorhanden</option>
-                        <option>Keine Dachfenster</option>
-                    </select>
-                </div>
-                <div class="select-group">
-                    <label>Kellergrube</label>
-                    <select name="basement">
-                        <option value="">Bitte wählen</option>
-                        <option selected>Vorhanden</option>
-                        <option>Nicht vorhanden</option>
-                    </select>
-                </div>
-                <div class="select-group">
-                    <label>Heizung / Ofen</label>
-                    <select name="heating">
-                        <option value="">Bitte wählen</option>
-                        <option>Holzofen</option>
-                        <option selected>Öl / Gas</option>
-                        <option>Elektro</option>
-                    </select>
-                </div>
-                <input
-                    type="button"
-                    name="previous"
-                    class="previous action-button"
-                    value="Zurück"
-                />
-                <input
-                    type="button"
-                    name="next"
-                    class="next action-button"
-                    value="Weiter"
-                />
-            </fieldset>
+        <!-- step 1 -->
+        <fieldset>
+            <h2 class="fs-title">Hatten Sie bereits einen Schadensfall?</h2>
+            <div class="radio-group">
+                <input type="radio" name="damage" id="damage_yes" value="yes" />
+                <label for="damage_yes" class="radio-btn">Ja</label>
+                <input type="radio" name="damage" id="damage_no" value="no" />
+                <label for="damage_no" class="radio-btn">Nein</label>
+            </div>
+            <textarea name="damage_desc" placeholder="Beschreiben Sie den Schaden">
+Beim letzten Hochwasser ist Wasser in meinen Keller eingedrungen.</textarea>
+            <br />
 
-            <!-- step 3 -->
-            <fieldset>
-                <h2 class="fs-title">Spezifische Fragen</h2>
-                <canvas></canvas>
-                <div id="question-container"></div>
-                <input
-                    type="button"
-                    name="previous"
-                    class="previous action-button"
-                    value="Zurück"
-                />
-                <input
-                    type="button"
-                    name="next"
-                    class="next action-button"
-                    value="Weiter"
-                />
-            </fieldset>
+            <a type="button" href="index.html" class="previous action-button">Zurück</a>
+            <input type="button" name="next" class="next action-button" value="Weiter" />
+        </fieldset>
 
-            <!-- step 4 -->
-            <fieldset id="field-set-submit">
-                <h2 class="fs-title">Absenden</h2>
-                <div class="select-group">
-                    <label>Vorname</label>
-                    <input
-                        type="text"
-                        name="customer-firstname"
-                        placeholder="Vorname"
-                        value="Alexander"
-                    />
-                </div>
-                <div class="select-group">
-                    <label>Nachname</label>
-                    <input
-                        type="text"
-                        name="customer-name"
-                        placeholder="Nachname"
-                        value="Peter"
-                    />
-                </div>
-                <div class="select-group">
-                    <label>E-Mail</label>
-                    <input
-                        type="email"
-                        name="customer-email"
-                        placeholder="E-Mail"
-                        value="alexander.peter@gmail.com"
-                    />
-                </div>
-                <p id="text-check-info">
-                    Überprüfen Sie alle Angaben und senden Sie das Formular ab.
-                </p>
-                <input
-                    type="button"
-                    name="previous"
-                    class="previous action-button"
-                    value="Zurück"
-                />
-                <button
-                    type="button"
-                    class="action-button"
-                    onclick="saveData();"
-                >
-                    Absenden
-                </button>
-            </fieldset>
-        </form>
+        <!-- step 2 -->
+        <fieldset>
+            <h2 class="fs-title">Gebäudeinformationen</h2>
+            <div class="select-group">
+                <label>Fassade</label>
+                <select name="facade">
+                    <option value="">Bitte wählen</option>
+                    <option>Holz</option>
+                    <option selected>Putz</option>
+                    <option>Stein</option>
+                </select>
+            </div>
+            <div class="select-group">
+                <label>Dachfenster</label>
+                <select name="roof">
+                    <option value="">Bitte wählen</option>
+                    <option selected>Dachfenster vorhanden</option>
+                    <option>Keine Dachfenster</option>
+                </select>
+            </div>
+            <div class="select-group">
+                <label>Kellergrube</label>
+                <select name="basement">
+                    <option value="">Bitte wählen</option>
+                    <option selected>Vorhanden</option>
+                    <option>Nicht vorhanden</option>
+                </select>
+            </div>
+            <div class="select-group">
+                <label>Heizung / Ofen</label>
+                <select name="heating">
+                    <option value="">Bitte wählen</option>
+                    <option>Holzofen</option>
+                    <option selected>Öl / Gas</option>
+                    <option>Elektro</option>
+                </select>
+            </div>
+            <input type="button" name="previous" class="previous action-button" value="Zurück" />
+            <input type="button" name="next" class="next action-button" value="Weiter" />
+        </fieldset>
 
-        <script>
-            // multi-step navigation
-            var current_fs, next_fs, previous_fs
-            var animating = false
+        <!-- step 3 -->
+        <fieldset>
+            <h2 class="fs-title">Spezifische Fragen</h2>
+            <canvas></canvas>
+            <div id="question-container"></div>
+            <input type="button" name="previous" class="previous action-button" value="Zurück" />
+            <input type="button" name="next" class="next action-button" value="Weiter" />
+        </fieldset>
 
-            $(".next").click(function () {
-                if (animating) return false
-                animating = true
+        <!-- step 4 -->
+        <fieldset id="field-set-submit">
+            <h2 class="fs-title">Absenden</h2>
+            <div class="select-group">
+                <label>Vorname</label>
+                <input type="text" name="customer-firstname" placeholder="Vorname" value="Alexander" />
+            </div>
+            <div class="select-group">
+                <label>Nachname</label>
+                <input type="text" name="customer-name" placeholder="Nachname" value="Peter" />
+            </div>
+            <div class="select-group">
+                <label>E-Mail</label>
+                <input type="email" name="customer-email" placeholder="E-Mail" value="alexander.peter@gmail.com" />
+            </div>
+            <p id="text-check-info">
+                Überprüfen Sie alle Angaben und senden Sie das Formular ab.
+            </p>
+            <input type="button" name="previous" class="previous action-button" value="Zurück" />
+            <button type="button" class="action-button" onclick="saveData();">
+                Absenden
+            </button>
+        </fieldset>
+    </form>
 
-                current_fs = $(this).parent()
-                next_fs = $(this).parent().next()
+    <script>
+        // multi-step navigation
+        var current_fs, next_fs, previous_fs
+        var animating = false
 
-                $("#progressbar li")
-                    .eq($("fieldset").index(next_fs))
-                    .addClass("active")
+        $(".next").click(function () {
+            if (animating) return false
+            animating = true
 
-                next_fs.show()
-                current_fs.animate(
-                    {
-                        opacity: 0,
+            current_fs = $(this).parent()
+            next_fs = $(this).parent().next()
+
+            $("#progressbar li")
+                .eq($("fieldset").index(next_fs))
+                .addClass("active")
+
+            next_fs.show()
+            current_fs.animate(
+                {
+                    opacity: 0,
+                },
+                {
+                    step: function (now) {
+                        scale = 1 - (1 - now) * 0.2
+                        left = now * 50 + "%"
+                        opacity = 1 - now
+                        current_fs.css({
+                            transform: "scale(" + scale + ")",
+                            position: "absolute",
+                        })
+                        next_fs.css({
+                            left: left,
+                            opacity: opacity,
+                        })
                     },
-                    {
-                        step: function (now) {
-                            scale = 1 - (1 - now) * 0.2
-                            left = now * 50 + "%"
-                            opacity = 1 - now
-                            current_fs.css({
-                                transform: "scale(" + scale + ")",
-                                position: "absolute",
-                            })
-                            next_fs.css({
-                                left: left,
-                                opacity: opacity,
-                            })
-                        },
-                        duration: 500,
-                        complete: function () {
-                            current_fs.hide()
-                            animating = false
-                        },
-                        easing: "easeInOutBack",
-                    }
-                )
-
-                // trigger canvas anim
-                if ($(this).parent().index() === 2) {
-                    startCanvasAnimation()
-
-                    // Step 1 Daten auslesen
-                    const damage =
-                        $("input[name='damage']:checked").val() || "no"
-                    const damage_desc =
-                        $("textarea[name='damage_desc']").val() || ""
-                    const facade = $("select[name='facade']").val() || ""
-                    const roof = $("select[name='roof']").val() || ""
-                    const basement = $("select[name='basement']").val() || ""
-                    const heating = $("select[name='heating']").val() || ""
-
-                    const urlParams = getQueryParams()
-                    const lon = urlParams.lon || null
-                    const lat = urlParams.lat || null
-
-                    const payload = {
-                        damage: damage,
-                        damage_desc: damage_desc,
-                        building_info: {
-                            facade: facade,
-                            roof: roof,
-                            basement: basement,
-                            heating: heating,
-                        },
-                        location: {
-                            lon: lon,
-                            lat: lat,
-                        },
-                    }
-
-                    const container = $("#question-container")
-                    container.html("")
-                    console.log(payload)
-
-                    $.ajax({
-                        url: "http://localhost:5000/api/risk",
-                        method: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify(payload),
-                        success: function (response) {
-                            console.log("Server Response:", response)
-                            response.questions.forEach((q, index) => {
-                                const fieldHTML = `
-                                                <div class="question-item">
-                                                    <label for="answer${index}">${q}</label>
-                                                    <input type="text" name="answer${index}" id="answer${index}" />
-                                                </div>
-                                                `
-                                container.append(fieldHTML)
-                            })
-                            stopCanvasAnimation()
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("Fehler beim Senden:", error)
-                        },
-                    })
-                }
-            })
-
-            $(".previous").click(function () {
-                if (animating) return false
-                animating = true
-
-                current_fs = $(this).parent()
-                previous_fs = $(this).parent().prev()
-
-                $("#progressbar li")
-                    .eq($("fieldset").index(current_fs))
-                    .removeClass("active")
-
-                previous_fs.show()
-                current_fs.animate(
-                    {
-                        opacity: 0,
+                    duration: 500,
+                    complete: function () {
+                        current_fs.hide()
+                        animating = false
                     },
-                    {
-                        step: function (now) {
-                            scale = 0.8 + (1 - now) * 0.2
-                            left = (1 - now) * 50 + "%"
-                            opacity = 1 - now
-                            current_fs.css({
-                                left: left,
-                            })
-                            previous_fs.css({
-                                transform: "scale(" + scale + ")",
-                                opacity: opacity,
-                            })
-                        },
-                        duration: 500,
-                        complete: function () {
-                            current_fs.hide()
-                            animating = false
-                        },
-                        easing: "easeInOutBack",
-                    }
-                )
-            })
-
-            // step 1: show / hide damagedec
-            $("input[name='damage']").change(function () {
-                if ($(this).val() === "yes") {
-                    $("textarea[name='damage_desc']")
-                        .css("height", "300px")
-                        .css("padding", "15px")
-                        .css("opacity", "1")
-                } else {
-                    $("textarea[name='damage_desc']")
-                        .css("height", "0px")
-                        .css("padding", "0px")
-                        .css("opacity", "0")
+                    easing: "easeInOutBack",
                 }
-            })
+            )
 
-            function getQueryParams() {
-                const params = {}
-                const queryString = window.location.search.substring(1)
-                const pairs = queryString.split("&")
-                for (let i = 0; i < pairs.length; i++) {
-                    const [key, value] = pairs[i].split("=")
-                    if (key)
-                        params[decodeURIComponent(key)] =
-                            decodeURIComponent(value)
-                }
-                return params
-            }
+            // trigger canvas anim
+            if ($(this).parent().index() === 2) {
+                startCanvasAnimation()
 
-            // canvas anim
-            var canvas = document.querySelector("canvas")
-            var ctx = canvas.getContext("2d")
-            var TAU = 2 * Math.PI
-            var balls = []
-            var centerX = canvas.width / 2
-            var centerY = canvas.height / 2
-            var radius = Math.min(window.innerWidth, window.innerHeight) / 3
-            var animationId
-
-            function Ball(x, y, r) {
-                this.x = x
-                this.y = y
-                this.vel = {
-                    x: Math.random() * 2 - 1,
-                    y: Math.random() * 2 - 1,
-                }
-                this.radius = r || 8
-                this.update = function () {
-                    this.x += this.vel.x
-                    this.y += this.vel.y
-                    let dx = this.x - centerX
-                    let dy = this.y - centerY
-                    if (Math.sqrt(dx * dx + dy * dy) > radius) {
-                        let angle = Math.atan2(dy, dx)
-                        this.x = centerX + radius * Math.cos(angle)
-                        this.y = centerY + radius * Math.sin(angle)
-                        this.vel.x *= -1
-                        this.vel.y *= -1
-                    }
-                }
-                this.draw = function () {
-                    ctx.beginPath()
-                    ctx.fillStyle = "#771511"
-                    ctx.globalAlpha = 0.8
-                    ctx.arc(this.x, this.y, this.radius, 0, TAU)
-                    ctx.fill()
-                }
-            }
-
-            function createBalls() {
-                balls = []
-                for (var i = 0; i < 50; i++) {
-                    let angle = Math.random() * TAU
-                    let r = Math.sqrt(Math.random()) * radius
-                    let x = centerX + r * Math.cos(angle)
-                    let y = centerY + r * Math.sin(angle)
-                    balls.push(new Ball(x, y, 8 + Math.random() * 5))
-                }
-            }
-
-            function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height)
-                ctx.fillStyle = "#ffffff"
-                ctx.fillRect(0, 0, canvas.width, canvas.height)
-                for (var i = 0; i < balls.length; i++) {
-                    var b1 = balls[i]
-                    b1.draw()
-                    for (var j = i + 1; j < balls.length; j++) {
-                        var b2 = balls[j]
-                        var dx = b1.x - b2.x
-                        var dy = b1.y - b2.y
-                        var dist = Math.sqrt(dx * dx + dy * dy)
-                        if (dist < 120) {
-                            ctx.beginPath()
-                            ctx.strokeStyle = "#ff8f18"
-                            ctx.globalAlpha = 1 - dist / 200
-                            ctx.lineWidth = 5
-                            ctx.moveTo(b1.x, b1.y)
-                            ctx.lineTo(b2.x, b2.y)
-                            ctx.stroke()
-                        }
-                    }
-                }
-            }
-
-            function loop() {
-                balls.forEach((b) => b.update())
-                draw()
-                animationId = requestAnimationFrame(loop)
-            }
-
-            function startCanvasAnimation() {
-                canvas.style.display = "inline"
-                canvas.width = window.innerWidth
-                canvas.height = window.innerHeight
-                centerX = canvas.width / 2
-                centerY = canvas.height / 2
-                radius = Math.min(canvas.width, canvas.height) / 3
-                createBalls()
-                loop()
-            }
-
-            function stopCanvasAnimation() {
-                cancelAnimationFrame(animationId)
-                canvas.style.display = "none"
-            }
-
-            window.addEventListener("resize", function () {
-                canvas.width = window.innerWidth
-                canvas.height = window.innerHeight
-                centerX = canvas.width / 2
-                centerY = canvas.height / 2
-                radius = Math.min(canvas.width, canvas.height) / 3
-            })
-
-            // save data
-            function saveData() {
-                const payload = {}
-
-                // customer info
-                payload.customer = {
-                    firstname: $("input[name='customer-firstname']").val(),
-                    lastname: $("input[name='customer-name']").val(),
-                    email: $("input[name='customer-email']").val(),
-                }
-
-                // building info
-                payload.building_info = {
-                    facade: $("select[name='facade']").val(),
-                    roof: $("select[name='roof']").val(),
-                    basement: $("select[name='basement']").val(),
-                    heating: $("select[name='heating']").val(),
-                }
-
-                // damage info
-                payload.damage = $("input[name='damage']:checked").val() || ""
-                payload.damage_desc =
+                // Step 1 Daten auslesen
+                const damage =
+                    $("input[name='damage']:checked").val() || "no"
+                const damage_desc =
                     $("textarea[name='damage_desc']").val() || ""
+                const facade = $("select[name='facade']").val() || ""
+                const roof = $("select[name='roof']").val() || ""
+                const basement = $("select[name='basement']").val() || ""
+                const heating = $("select[name='heating']").val() || ""
 
-                // questions and answers
-                payload.specific_questions = []
-                $("#question-container .question-item").each(function () {
-                    const questionText = $(this).find("label").text()
-                    const answerVal = $(this).find("input[type='text']").val()
-                    payload.specific_questions.push({
-                        question: questionText,
-                        answer: answerVal || "",
-                    })
-                })
+                const urlParams = getQueryParams()
+                const lon = urlParams.lon || null
+                const lat = urlParams.lat || null
 
-                $("#field-set-submit").html(
-                    "<h2 class='fs-title'>Ihre Anfrage wird verarbeitet</h2><p><i class='fa-solid fa-2xl fa-spin fa-spinner'></p>"
-                )
+                const payload = {
+                    damage: damage,
+                    damage_desc: damage_desc,
+                    building_info: {
+                        facade: facade,
+                        roof: roof,
+                        basement: basement,
+                        heating: heating,
+                    },
+                    location: {
+                        lon: lon,
+                        lat: lat,
+                    },
+                }
+
+                const container = $("#question-container")
+                container.html("")
+                console.log(payload)
 
                 $.ajax({
-                    url: "http://localhost:5000/api/case",
+                    url: "http://localhost:5000/api/risk",
                     method: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(payload),
                     success: function (response) {
                         console.log("Server Response:", response)
-
-                        $("#field-set-submit").html(
-                            "<h2 class='fs-title'>Ihre Anfrage wurde übermittel</h2><p>Sie können dieses Fenster nun schliessen.</p>"
-                        )
+                        response.questions.forEach((q, index) => {
+                            const fieldHTML = `
+                                                <div class="question-item">
+                                                    <label for="answer${index}">${q}</label>
+                                                    <input type="text" name="answer${index}" id="answer${index}" />
+                                                </div>
+                                                `
+                            container.append(fieldHTML)
+                        })
+                        stopCanvasAnimation()
                     },
                     error: function (xhr, status, error) {
                         console.error("Fehler beim Senden:", error)
                     },
                 })
             }
-        </script>
-    </body>
+        })
+
+        $(".previous").click(function () {
+            if (animating) return false
+            animating = true
+
+            current_fs = $(this).parent()
+            previous_fs = $(this).parent().prev()
+
+            $("#progressbar li")
+                .eq($("fieldset").index(current_fs))
+                .removeClass("active")
+
+            previous_fs.show()
+            current_fs.animate(
+                {
+                    opacity: 0,
+                },
+                {
+                    step: function (now) {
+                        scale = 0.8 + (1 - now) * 0.2
+                        left = (1 - now) * 50 + "%"
+                        opacity = 1 - now
+                        current_fs.css({
+                            left: left,
+                        })
+                        previous_fs.css({
+                            transform: "scale(" + scale + ")",
+                            opacity: opacity,
+                        })
+                    },
+                    duration: 500,
+                    complete: function () {
+                        current_fs.hide()
+                        animating = false
+                    },
+                    easing: "easeInOutBack",
+                }
+            )
+        })
+
+        // step 1: show / hide damagedec
+        $("input[name='damage']").change(function () {
+            if ($(this).val() === "yes") {
+                $("textarea[name='damage_desc']")
+                    .css("height", "300px")
+                    .css("padding", "15px")
+                    .css("opacity", "1")
+            } else {
+                $("textarea[name='damage_desc']")
+                    .css("height", "0px")
+                    .css("padding", "0px")
+                    .css("opacity", "0")
+            }
+        })
+
+        function getQueryParams() {
+            const params = {}
+            const queryString = window.location.search.substring(1)
+            const pairs = queryString.split("&")
+            for (let i = 0; i < pairs.length; i++) {
+                const [key, value] = pairs[i].split("=")
+                if (key)
+                    params[decodeURIComponent(key)] =
+                        decodeURIComponent(value)
+            }
+            return params
+        }
+
+        // canvas anim
+        var canvas = document.querySelector("canvas")
+        var ctx = canvas.getContext("2d")
+        var TAU = 2 * Math.PI
+        var balls = []
+        var centerX = canvas.width / 2
+        var centerY = canvas.height / 2
+        var radius = Math.min(window.innerWidth, window.innerHeight) / 3
+        var animationId
+
+        function Ball(x, y, r) {
+            this.x = x
+            this.y = y
+            this.vel = {
+                x: Math.random() * 2 - 1,
+                y: Math.random() * 2 - 1,
+            }
+            this.radius = r || 8
+            this.update = function () {
+                this.x += this.vel.x
+                this.y += this.vel.y
+                let dx = this.x - centerX
+                let dy = this.y - centerY
+                if (Math.sqrt(dx * dx + dy * dy) > radius) {
+                    let angle = Math.atan2(dy, dx)
+                    this.x = centerX + radius * Math.cos(angle)
+                    this.y = centerY + radius * Math.sin(angle)
+                    this.vel.x *= -1
+                    this.vel.y *= -1
+                }
+            }
+            this.draw = function () {
+                ctx.beginPath()
+                ctx.fillStyle = "#771511"
+                ctx.globalAlpha = 0.8
+                ctx.arc(this.x, this.y, this.radius, 0, TAU)
+                ctx.fill()
+            }
+        }
+
+        function createBalls() {
+            balls = []
+            for (var i = 0; i < 50; i++) {
+                let angle = Math.random() * TAU
+                let r = Math.sqrt(Math.random()) * radius
+                let x = centerX + r * Math.cos(angle)
+                let y = centerY + r * Math.sin(angle)
+                balls.push(new Ball(x, y, 8 + Math.random() * 5))
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            ctx.fillStyle = "#ffffff"
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+            for (var i = 0; i < balls.length; i++) {
+                var b1 = balls[i]
+                b1.draw()
+                for (var j = i + 1; j < balls.length; j++) {
+                    var b2 = balls[j]
+                    var dx = b1.x - b2.x
+                    var dy = b1.y - b2.y
+                    var dist = Math.sqrt(dx * dx + dy * dy)
+                    if (dist < 120) {
+                        ctx.beginPath()
+                        ctx.strokeStyle = "#ff8f18"
+                        ctx.globalAlpha = 1 - dist / 200
+                        ctx.lineWidth = 5
+                        ctx.moveTo(b1.x, b1.y)
+                        ctx.lineTo(b2.x, b2.y)
+                        ctx.stroke()
+                    }
+                }
+            }
+        }
+
+        function loop() {
+            balls.forEach((b) => b.update())
+            draw()
+            animationId = requestAnimationFrame(loop)
+        }
+
+        function startCanvasAnimation() {
+            canvas.style.display = "inline"
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+            centerX = canvas.width / 2
+            centerY = canvas.height / 2
+            radius = Math.min(canvas.width, canvas.height) / 3
+            createBalls()
+            loop()
+        }
+
+        function stopCanvasAnimation() {
+            cancelAnimationFrame(animationId)
+            canvas.style.display = "none"
+        }
+
+        window.addEventListener("resize", function () {
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+            centerX = canvas.width / 2
+            centerY = canvas.height / 2
+            radius = Math.min(canvas.width, canvas.height) / 3
+        })
+
+        // save data
+        function saveData() {
+            const payload = {}
+
+            // customer info
+            payload.customer = {
+                firstname: $("input[name='customer-firstname']").val(),
+                lastname: $("input[name='customer-name']").val(),
+                email: $("input[name='customer-email']").val(),
+            }
+
+            // building info
+            payload.building_info = {
+                facade: $("select[name='facade']").val(),
+                roof: $("select[name='roof']").val(),
+                basement: $("select[name='basement']").val(),
+                heating: $("select[name='heating']").val(),
+            }
+
+            // damage info
+            payload.damage = $("input[name='damage']:checked").val() || ""
+            payload.damage_desc =
+                $("textarea[name='damage_desc']").val() || ""
+
+            // questions and answers
+            payload.specific_questions = []
+            $("#question-container .question-item").each(function () {
+                const questionText = $(this).find("label").text()
+                const answerVal = $(this).find("input[type='text']").val()
+                payload.specific_questions.push({
+                    question: questionText,
+                    answer: answerVal || "",
+                })
+            })
+
+            $("#field-set-submit").html(
+                "<h2 class='fs-title'>Ihre Anfrage wird verarbeitet</h2><p><i class='fa-solid fa-2xl fa-spin fa-spinner'></p>"
+            )
+
+            $.ajax({
+                url: "http://localhost:5000/api/case",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(payload),
+                success: function (response) {
+                    console.log("Server Response:", response)
+
+                    $("#field-set-submit").html(
+                        "<h2 class='fs-title'>Ihre Anfrage wurde übermittel</h2><p>Sie können dieses Fenster nun schliessen.</p>"
+                    )
+                },
+                error: function (xhr, status, error) {
+                    console.error("Fehler beim Senden:", error)
+                },
+            })
+        }
+    </script>
+</body>
+
 </html>

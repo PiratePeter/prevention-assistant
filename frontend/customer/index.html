@@ -1,196 +1,195 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>GVB Preventa</title>
-        <link rel="icon" type="image/x-icon" href="../res/favicon.png" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script src="https://api.mapbox.com/mapbox-gl-js/v3.14.0/mapbox-gl.js"></script>
-        <link
-            href="https://api.mapbox.com/mapbox-gl-js/v3.14.0/mapbox-gl.css"
-            rel="stylesheet"
-        />
-        <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.1.0/mapbox-gl-geocoder.min.js"></script>
-        <link
-            rel="stylesheet"
-            href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.1.0/mapbox-gl-geocoder.css"
-            type="text/css"
-        />
 
-        <style>
-            @import url(https://fonts.googleapis.com/css?family=Montserrat);
+<head>
+    <meta charset="utf-8" />
+    <title>GVB Preventa</title>
+    <link rel="icon" type="image/x-icon" href="../res/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.14.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.14.0/mapbox-gl.css" rel="stylesheet" />
+    <script
+        src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.1.0/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet"
+        href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.1.0/mapbox-gl-geocoder.css"
+        type="text/css" />
 
-            /*basic stuff*/
-            * {
-                margin: 0;
-                padding: 0;
-            }
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Montserrat);
 
-            html {
-                min-height: 100%;
-                background: linear-gradient(#ff8f18, #ee000c);
-                background-attachment: fixed;
-            }
+        /*basic stuff*/
+        * {
+            margin: 0;
+            padding: 0;
+        }
 
-            body {
-                font-family: montserrat, arial, verdana;
-            }
+        html {
+            min-height: 100%;
+            background: linear-gradient(#ff8f18, #ee000c);
+            background-attachment: fixed;
+        }
 
-            #header {
-                background-color: white;
-                display: flex;
-            }
+        body {
+            font-family: montserrat, arial, verdana;
+        }
 
-            /* map container */
-            #mapContainer {
-                width: calc(100% - 100px);
-                height: calc(100vh - 100px - 75px);
-                margin: 50px auto;
-                position: relative;
-                border-radius: 8px;
-                overflow: hidden;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            }
+        #header {
+            background-color: white;
+            display: flex;
+        }
 
-            #map {
-                width: 100%;
-                height: 100%;
-            }
+        /* map container */
+        #mapContainer {
+            width: calc(100% - 100px);
+            height: calc(100vh - 100px - 75px);
+            margin: 50px auto;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
 
-            /* buttons */
-            #map .mapboxgl-ctrl-top-left {
-                display: flex;
-                width: 1000px;
-            }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
 
-            #map .mapboxgl-ctrl.mapboxgl-ctrl-group {
-                box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
-            }
+        /* buttons */
+        #map .mapboxgl-ctrl-top-left {
+            display: flex;
+            width: 1000px;
+        }
 
-            #map .mapboxgl-ctrl-geolocate {
-                height: 100% !important;
-            }
+        #map .mapboxgl-ctrl.mapboxgl-ctrl-group {
+            box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
+        }
 
-            #style-switcher {
-                position: absolute;
-                top: 10px;
-                right: 10px;
-                z-index: 2;
-                background: white;
-                border: none;
-                padding: 6px 10px;
-                cursor: pointer;
-                border-radius: 4px;
-                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-            }
+        #map .mapboxgl-ctrl-geolocate {
+            height: 100% !important;
+        }
 
-            #next-page-btn {
-                position: absolute;
-                bottom: 30px;
-                right: 10px;
-                z-index: 2;
-                background: #ff8f18;
-                color: white;
-                border: none;
-                padding: 10px 16px;
-                cursor: pointer;
-                border-radius: 6px;
-                font-size: 14px;
-            }
-        </style>
-    </head>
+        #style-switcher {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+            background: white;
+            border: none;
+            padding: 6px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        }
 
-    <body>
-        <div id="header">
-            <img src="../res/logo.png" height="75px" />
-        </div>
+        #next-page-btn {
+            position: absolute;
+            bottom: 30px;
+            right: 10px;
+            z-index: 2;
+            background: #ff8f18;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 14px;
+        }
 
-        <div id="mapContainer">
-            <div id="map"></div>
-            <button id="style-switcher">🌍 Satellit</button>
-            <button id="next-page-btn">Weiter</button>
-        </div>
+    </style>
+</head>
 
-        <script>
-            mapboxgl.accessToken =
-                "pk.eyJ1IjoidGhlcmVhbG5vZSIsImEiOiJja3Rrb3c3cXkwM2hnMnlvMzJwczd1emM5In0.-C6BEeH1a2iQiM_j5IAuDQ"
+<body>
+    <div id="header">
+        <img src="../res/logo.png" height="75px" />
+    </div>
 
-            const map = new mapboxgl.Map({
-                container: "map",
-                style: "mapbox://styles/mapbox/light-v11",
-                center: [7.5, 46.9],
-                zoom: 9,
+    <div id="mapContainer">
+        <div id="map"></div>
+        <button id="style-switcher">🌍 Satellit</button>
+        <button id="next-page-btn">Weiter</button>
+    </div>
+
+    <script>
+        mapboxgl.accessToken =
+            "pk.eyJ1IjoidGhlcmVhbG5vZSIsImEiOiJja3Rrb3c3cXkwM2hnMnlvMzJwczd1emM5In0.-C6BEeH1a2iQiM_j5IAuDQ"
+
+        const map = new mapboxgl.Map({
+            container: "map",
+            style: "mapbox://styles/mapbox/light-v11",
+            center: [7.5, 46.9],
+            zoom: 9,
+        })
+
+        // address searcg
+        const geocoder = new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken,
+            mapboxgl: mapboxgl,
+            placeholder: "Adresse suchen",
+            countries: "ch",
+        })
+        map.addControl(geocoder, "top-left")
+
+        // gps
+        const geolocate = new mapboxgl.GeolocateControl({
+            positionOptions: { enableHighAccuracy: true },
+            trackUserLocation: false,
+            showUserHeading: true,
+        })
+        map.addControl(geolocate, "top-left")
+
+        let marker = null
+        let currentCoords = null
+
+        function setMarkerAndLog(lon, lat) {
+            if (marker) marker.remove()
+            marker = new mapboxgl.Marker({ color: "#ff8f18" })
+                .setLngLat([lon, lat])
+                .addTo(map)
+            map.flyTo({ center: [lon, lat], zoom: 14 })
+            currentCoords = { lon, lat }
+            console.log("Koordinaten WGS84:", lon, lat)
+        }
+
+        map.on("click", (e) => setMarkerAndLog(e.lngLat.lng, e.lngLat.lat))
+        geocoder.on("result", (e) => {
+            const [lon, lat] = e.result.center
+            setMarkerAndLog(lon, lat)
+        })
+        geolocate.on("geolocate", (e) => {
+            const lon = e.coords.longitude
+            const lat = e.coords.latitude
+            setMarkerAndLog(lon, lat)
+        })
+
+        // switch style
+        let satellite = false
+        document
+            .getElementById("style-switcher")
+            .addEventListener("click", () => {
+                if (!satellite) {
+                    map.setStyle(
+                        "mapbox://styles/mapbox/satellite-streets-v12"
+                    )
+                    document.getElementById("style-switcher").innerText =
+                        "🗺️ Karte"
+                } else {
+                    map.setStyle("mapbox://styles/mapbox/light-v11")
+                    document.getElementById("style-switcher").innerText =
+                        "🌍 Satellit"
+                }
+                satellite = !satellite
             })
 
-            // address searcg
-            const geocoder = new MapboxGeocoder({
-                accessToken: mapboxgl.accessToken,
-                mapboxgl: mapboxgl,
-                placeholder: "Adresse suchen",
-                countries: "ch",
+        document
+            .getElementById("next-page-btn")
+            .addEventListener("click", () => {
+                if (!currentCoords) {
+                    alert("Bitte zuerst eine Position wählen!")
+                    return
+                }
+                window.location.href = `form.html?lon=${currentCoords.lon}&lat=${currentCoords.lat}`
             })
-            map.addControl(geocoder, "top-left")
+    </script>
+</body>
 
-            // gps
-            const geolocate = new mapboxgl.GeolocateControl({
-                positionOptions: { enableHighAccuracy: true },
-                trackUserLocation: false,
-                showUserHeading: true,
-            })
-            map.addControl(geolocate, "top-left")
-
-            let marker = null
-            let currentCoords = null
-
-            function setMarkerAndLog(lon, lat) {
-                if (marker) marker.remove()
-                marker = new mapboxgl.Marker({ color: "#ff8f18" })
-                    .setLngLat([lon, lat])
-                    .addTo(map)
-                map.flyTo({ center: [lon, lat], zoom: 14 })
-                currentCoords = { lon, lat }
-                console.log("Koordinaten WGS84:", lon, lat)
-            }
-
-            map.on("click", (e) => setMarkerAndLog(e.lngLat.lng, e.lngLat.lat))
-            geocoder.on("result", (e) => {
-                const [lon, lat] = e.result.center
-                setMarkerAndLog(lon, lat)
-            })
-            geolocate.on("geolocate", (e) => {
-                const lon = e.coords.longitude
-                const lat = e.coords.latitude
-                setMarkerAndLog(lon, lat)
-            })
-
-            // switch style
-            let satellite = false
-            document
-                .getElementById("style-switcher")
-                .addEventListener("click", () => {
-                    if (!satellite) {
-                        map.setStyle(
-                            "mapbox://styles/mapbox/satellite-streets-v12"
-                        )
-                        document.getElementById("style-switcher").innerText =
-                            "🗺️ Karte"
-                    } else {
-                        map.setStyle("mapbox://styles/mapbox/light-v11")
-                        document.getElementById("style-switcher").innerText =
-                            "🌍 Satellit"
-                    }
-                    satellite = !satellite
-                })
-
-            document
-                .getElementById("next-page-btn")
-                .addEventListener("click", () => {
-                    if (!currentCoords) {
-                        alert("Bitte zuerst eine Position wählen!")
-                        return
-                    }
-                    window.location.href = `form.html?lon=${currentCoords.lon}&lat=${currentCoords.lat}`
-                })
-        </script>
-    </body>
 </html>

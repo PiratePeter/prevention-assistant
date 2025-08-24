@@ -1,124 +1,121 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>GVB Preventa</title>
-        <link rel="icon" type="image/x-icon" href="../res/favicon.png" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <link
-            rel="stylesheet"
-            href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"
-        />
-        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        />
-        <style>
-            @import url(https://fonts.googleapis.com/css?family=Montserrat);
 
-            /*basic stuff*/
-            * {
-                margin: 0;
-                padding: 0;
-            }
+<head>
+    <meta charset="utf-8" />
+    <title>GVB Preventa</title>
+    <link rel="icon" type="image/x-icon" href="../res/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Montserrat);
 
-            html {
-                min-height: 100%;
-                background: linear-gradient(#ff8f18, #ee000c);
-                background-attachment: fixed;
-            }
+        /*basic stuff*/
+        * {
+            margin: 0;
+            padding: 0;
+        }
 
-            body {
-                font-family: montserrat, arial, verdana;
-            }
+        html {
+            min-height: 100%;
+            background: linear-gradient(#ff8f18, #ee000c);
+            background-attachment: fixed;
+        }
 
-            #header {
-                background-color: white;
-                display: flex;
-            }
+        body {
+            font-family: montserrat, arial, verdana;
+        }
 
-            /*table*/
-            #data-table-container {
-                width: 90%;
-                margin: 50px auto;
-                background: white;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            }
+        #header {
+            background-color: white;
+            display: flex;
+        }
 
-            .btn-view {
-                background: #ff8f18;
-                color: white;
-                border: none;
-                padding: 5px 10px;
-                border-radius: 4px;
-                cursor: pointer;
-                float: right;
-            }
+        /*table*/
+        #data-table-container {
+            width: 90%;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
 
-            .btn-view:hover {
-                background: #ee000c;
-            }
-        </style>
-    </head>
+        .btn-view {
+            background: #ff8f18;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
 
-    <body>
-        <div id="header">
-            <img src="../res/logo.png" height="75px" />
-        </div>
-        <div id="data-table-container">
-            <table id="case-table" class="display" style="width: 100%">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Vorname</th>
-                        <th>Name</th>
-                        <th>Datum</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-        <script>
-            $.ajax({
-                url: "http://localhost:5000/api/cases",
-                method: "GET",
-                contentType: "application/json",
-                success: function (response) {
-                    console.log("Server Response:", response)
+        .btn-view:hover {
+            background: #ee000c;
+        }
 
-                    // init table
-                    $(document).ready(function () {
-                        $("#case-table").DataTable({
-                            data: response,
-                            language: {
-                                url: "https://cdn.datatables.net/plug-ins/1.10.22/i18n/German.json",
-                            },
-                            columns: [
-                                { data: "ID" },
-                                { data: "Vorname" },
-                                { data: "Name" },
-                                { data: "Datum" },
-                                {
-                                    data: null,
-                                    render: function (data, type, row) {
-                                        return `<a class="btn-view" href="claim.html?id=${row.ID}"><i class="fa-solid fa-eye"></i></button>`
-                                    },
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <img src="../res/logo.png" height="75px" />
+    </div>
+    <div id="data-table-container">
+        <table id="case-table" class="display" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Vorname</th>
+                    <th>Name</th>
+                    <th>Datum</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <script>
+        $.ajax({
+            url: "http://localhost:5000/api/cases",
+            method: "GET",
+            contentType: "application/json",
+            success: function (response) {
+                console.log("Server Response:", response)
+
+                // init table
+                $(document).ready(function () {
+                    $("#case-table").DataTable({
+                        data: response,
+                        language: {
+                            url: "https://cdn.datatables.net/plug-ins/1.10.22/i18n/German.json",
+                        },
+                        columns: [
+                            { data: "ID" },
+                            { data: "Vorname" },
+                            { data: "Name" },
+                            { data: "Datum" },
+                            {
+                                data: null,
+                                render: function (data, type, row) {
+                                    return `<a class="btn-view" href="claim.html?id=${row.ID}"><i class="fa-solid fa-eye"></i></button>`
                                 },
-                            ],
-                            pageLength: 10,
-                            lengthMenu: [5, 10, 15, 25],
-                        })
+                            },
+                        ],
+                        pageLength: 10,
+                        lengthMenu: [5, 10, 15, 25],
                     })
-                },
-                error: function (xhr, status, error) {
-                    console.error("Fehler beim Senden:", error)
-                },
-            })
-        </script>
-    </body>
+                })
+            },
+            error: function (xhr, status, error) {
+                console.error("Fehler beim Senden:", error)
+            },
+        })
+    </script>
+</body>
+
 </html>
