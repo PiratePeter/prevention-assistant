@@ -5,7 +5,7 @@ from google import genai
 client = genai.Client()
 
 
-def gen_questionaire_logic(risks: dict, previous_claims_description: str)-> list[str]:
+def gen_questionaire_logic(risks: dict, previous_claims_description: str) -> list[str]:
     """
     Generates a questionnaire based on the provided risks and previous claims description.
     :param risks: List of risks with their names and danger levels
@@ -30,10 +30,8 @@ def gen_questionaire_logic(risks: dict, previous_claims_description: str)-> list
         + " Ensure the questions are in high german (minor adaptions to Switzerland ß->ss, etc.), clear, concise, and directly related"
         + " to the risks identified."
     )
-    
-    response = client.models.generate_content(
-        model='gemini-2.5-flash', contents=prompt
-    )
+
+    response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
 
     response_text = response.text.strip()
     if not response_text.startswith('{') or not response_text.endswith('}'):
@@ -47,6 +45,7 @@ def gen_questionaire_logic(risks: dict, previous_claims_description: str)-> list
         raise ValueError(f"Response is not a list of questions: {response_json}")
     return response_json
 
+
 if __name__ == "__main__":
     # Example usage
     risks_example = {
@@ -54,10 +53,12 @@ if __name__ == "__main__":
         "Sturm": "mittlere Gefährdung",
         "Hagel": "mittlere Gefährdung",
         "Lawine": "keine Gefährdung",
-        "(Erd-)Rutschung": "keine Gefährdung"
+        "(Erd-)Rutschung": "keine Gefährdung",
     }
-    previous_claims_example = "Previous claims related to flooding in 2020 where the basement was affected."
-    
+    previous_claims_example = (
+        "Previous claims related to flooding in 2020 where the basement was affected."
+    )
+
     try:
         questions = gen_questionaire_logic(risks_example, previous_claims_example)
         print("Generated Questions:", questions)

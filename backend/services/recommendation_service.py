@@ -5,13 +5,13 @@ from google import genai
 client = genai.Client()
 
 
-def gen_recommendation_logic(data: dict)-> dict[str, str]:
+def gen_recommendation_logic(data: dict) -> dict[str, str]:
     """
     Generates a recommendation based on the provided data.
     :param data: Dictionary containing risks and previous claims description
     """
     merged_context = json_to_string(data)
-    
+
     prompt = (
         "Generate a mail to a building owner in the canton of Bern, Switzerland, "
         "recommending preventative actions to mitigate future damage from natural forces. "
@@ -31,10 +31,8 @@ def gen_recommendation_logic(data: dict)-> dict[str, str]:
     )
 
     print(f"Prompt for recommendation generation:\n{prompt}\n")
-    
-    response = client.models.generate_content(
-        model='gemini-2.5-flash', contents=prompt
-    )
+
+    response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
 
     response_text = response.text.strip()
     if not response_text.startswith('{') or not response_text.endswith('}'):
@@ -77,26 +75,27 @@ def json_to_string(data, indent=0):
 
 if __name__ == "__main__":
     # Example usage
-    data = {"damage": "yes",
-            "damage_desc": "Wasserschaden im Keller durch Rohrbruch",
-            "building_info": {
-                "facade": "Holz",
-                "basement": "Beton",
-                "roof": "Ziegel",
-                "heating": "Wärmepumpe"
-            },
-            "specific_questions": [
-                {"question": "Baujahr des Gebäudes?", "answer": "1998" },
-                {"question": "Hat es eine Solaranlage?", "answer": "Ja, 12 kWp"},
-                {"question": "Wie viele Etagen?", "answer": "3" }
-            ],
-            "customer": {
-                "firstname": "Luca",
-                "lastname": "Müller",
-                "email": "luca.mueller@example.com"
-            }
-        }
-    
+    data = {
+        "damage": "yes",
+        "damage_desc": "Wasserschaden im Keller durch Rohrbruch",
+        "building_info": {
+            "facade": "Holz",
+            "basement": "Beton",
+            "roof": "Ziegel",
+            "heating": "Wärmepumpe",
+        },
+        "specific_questions": [
+            {"question": "Baujahr des Gebäudes?", "answer": "1998"},
+            {"question": "Hat es eine Solaranlage?", "answer": "Ja, 12 kWp"},
+            {"question": "Wie viele Etagen?", "answer": "3"},
+        ],
+        "customer": {
+            "firstname": "Luca",
+            "lastname": "Müller",
+            "email": "luca.mueller@example.com",
+        },
+    }
+
     try:
         recommendation = gen_recommendation_logic(data)
         print("Generated Recommendation:", recommendation)

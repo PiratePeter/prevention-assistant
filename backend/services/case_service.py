@@ -9,10 +9,7 @@ from services.recommendation_service import gen_recommendation_logic
 
 def load_cases_logic(_):
     session = get_session()
-    result = (
-        session.query(PreventionCase)
-        .all()
-    )
+    result = session.query(PreventionCase).all()
     return (
         jsonify(
             [
@@ -27,7 +24,8 @@ def load_cases_logic(_):
         ),
         200,
     )
-    
+
+
 def load_case_logic(request):
     session = get_session()
     case_id = request.args.get('id')
@@ -41,37 +39,34 @@ def load_case_logic(request):
         .all()
     )
 
-    db_case = (
-        session.query(PreventionCase)
-        .filter(PreventionCase.id == case_id)
-        .first()
-    )
+    db_case = session.query(PreventionCase).filter(PreventionCase.id == case_id).first()
     damage_desc = db_case.damage_desc
     response = {
-        "damage":"Nein" if ""==damage_desc else "Ja",
+        "damage": "Nein" if "" == damage_desc else "Ja",
         "damage_desc": damage_desc,
-        "building_info":{
-            "facade":db_case.facade,
-            "basement":db_case.basement,
-            "roof":db_case.roof,
-            "heating":db_case.heating
+        "building_info": {
+            "facade": db_case.facade,
+            "basement": db_case.basement,
+            "roof": db_case.roof,
+            "heating": db_case.heating,
         },
-        "specific_questions":[
+        "specific_questions": [
             {
                 "question": db_question.question_text,
                 "answer": db_question.answer_text,
             }
             for db_question in db_questions
         ],
-        "customer":{
-            "firstname":db_case.firstname,
-            "lastname":db_case.lastname,
-            "email":db_case.email
+        "customer": {
+            "firstname": db_case.firstname,
+            "lastname": db_case.lastname,
+            "email": db_case.email,
         },
-        "preventions":db_case.preventions
+        "preventions": db_case.preventions,
     }
 
     return jsonify(response), 200
+
 
 def save_case_logic(request):
     session = get_session()
@@ -93,16 +88,16 @@ def save_case_logic(request):
     recommendation = gen_recommendation_logic(data)
 
     db_case = PreventionCase(
-        creation_time = timestamp,
-        firstname=firstname, 
-        lastname=lastname, 
+        creation_time=timestamp,
+        firstname=firstname,
+        lastname=lastname,
         email=email,
         facade=facade,
         roof=roof,
         basement=basement,
         heating=heating,
         damage_desc=damage_desc,
-        preventions=recommendation["recommendation"]
+        preventions=recommendation["recommendation"],
     )
     session.add(db_case)
     session.commit()
@@ -111,8 +106,8 @@ def save_case_logic(request):
     for question in questions:
         db_question = PreventionQuestion(
             prevention_case_id=db_case.id,
-            question_text=question['question'], 
-            answer_text=question['answer']
+            question_text=question['question'],
+            answer_text=question['answer'],
         )
         db_questions.append(db_question)
 

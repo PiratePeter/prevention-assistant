@@ -11,6 +11,7 @@ schema = DamageReportSchema()
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
+
 @recommendation_bp.route("/recommendation", methods=["POST"])
 def gen_recommendation():
     """

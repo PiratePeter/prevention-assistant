@@ -1,19 +1,23 @@
 from marshmallow import Schema, fields
 
+
 class BuildingInfoSchema(Schema):
     facade = fields.String(required=True)
     basement = fields.String(required=True)
     roof = fields.String(required=True)
     heating = fields.String(required=True)
 
+
 class SpecificQuestionSchema(Schema):
     question = fields.String(required=True)
     answer = fields.String(required=True)
+
 
 class CustomerSchema(Schema):
     firstname = fields.String(required=True)
     lastname = fields.String(required=True)
     email = fields.Email(required=True)
+
 
 class DamageReportSchema(Schema):
     damage = fields.String(required=True)

@@ -9,11 +9,18 @@ from shapely.geometry import Point
 from services.questionnaire_service import gen_questionaire_logic
 
 WEBGIS_URL_BASE = os.getenv("WEBGIS_URL")
-DANGER_LEVEL_MAP = {-1: "Keine Gefährdung bekannt", 1: "Restgefährdung", 2:"geringe Gefährdung", 3: "mittlere Gefährdung", 4: "erhebliche Gefährdung"}	
+DANGER_LEVEL_MAP = {
+    -1: "Keine Gefährdung bekannt",
+    1: "Restgefährdung",
+    2: "geringe Gefährdung",
+    3: "mittlere Gefährdung",
+    4: "erhebliche Gefährdung",
+}
 
 gdf = gpd.read_parquet("data/natgefka_sygefgeb.parquet")
 if gdf.geometry.name != "geometry":
     gdf = gdf.set_geometry("geometry")
+
 
 def get_risk_evaluation_logic(request):
     data = request.json
@@ -27,7 +34,7 @@ def get_risk_evaluation_logic(request):
 
     max_gefstu = check_max_gefstu(x, y)
 
-    gis_data = fetch_gis_data(x,y)
+    gis_data = fetch_gis_data(x, y)
 
     hail_risk = DANGER_LEVEL_MAP[-1]
     storm_risk = DANGER_LEVEL_MAP[-1]
@@ -36,7 +43,7 @@ def get_risk_evaluation_logic(request):
         attributes = gis_data["features"][0]["attributes"]
         hail_risk = attributes["HAGEL_TEXT"]
         storm_risk = attributes["STURM_TEXT"]
-    
+
     risks = {
         "HOCHWASSER": DANGER_LEVEL_MAP[max_gefstu],
         "HAGEL": hail_risk,
@@ -44,9 +51,8 @@ def get_risk_evaluation_logic(request):
     }
 
     questions = gen_questionaire_logic(risks, previous_claims_description)
-    
-    return jsonify(questions)
 
+    return jsonify(questions)
 
     """
     OBERFLAECHENABFLUSS
@@ -60,14 +66,16 @@ def get_risk_evaluation_logic(request):
     STURM
     STURM_TEXT
     """
-def fetch_gis_data(x,y):
+
+
+def fetch_gis_data(x, y):
     params = {
         "geometry": f"{x},{y}",
         "geometryType": "esriGeometryPoint",
         "outFields": "*",
         "returnGeometry": "false",
         "returnTrueCurves": "false",
-        "f": "json"
+        "f": "json",
     }
     try:
         resp = requests.get(WEBGIS_URL_BASE, params=params, timeout=10)
@@ -76,11 +84,9 @@ def fetch_gis_data(x,y):
     except Exception as e:
         return {"error": str(e)}
 
+
 def check_max_gefstu(x_coord: float, y_coord: float, crs: str = "EPSG:2056"):
-    point = gpd.GeoDataFrame(
-        {"geometry": [Point(x_coord, y_coord)]},
-        crs=crs
-    )
+    point = gpd.GeoDataFrame({"geometry": [Point(x_coord, y_coord)]}, crs=crs)
     if gdf.crs != point.crs:
         point = point.to_crs(gdf.crs)
     overlaps = gpd.sjoin(gdf, point, predicate="intersects")
