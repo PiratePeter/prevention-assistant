@@ -24,10 +24,10 @@ def create_app():
 
     return app
 
+application = create_app() # NOTE: Needed for AWS Elastic Beanstalk
 
 if __name__ == "__main__":
     import logging
 
     logging.basicConfig(level=logging.DEBUG)
-    flask_app = create_app()
-    flask_app.run(debug=True, host="0.0.0.0", port=5000)
+    application.run(debug=True, host="0.0.0.0", port=5000)

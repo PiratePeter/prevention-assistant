@@ -1,0 +1,10 @@
+.coverage
+.coveragerc
+.env
+.env.template
+.gitignore
+.pylintrc
+.venv
+*.pyc
+__pycache__/
+pytest.ini
