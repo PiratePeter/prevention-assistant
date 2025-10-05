@@ -141,7 +141,6 @@
             font-weight: bold;
             cursor: pointer;
         }
-
     </style>
 </head>
 
@@ -173,8 +172,7 @@
         <div class="section-title">Präventive Masssnahmen</div>
         <textarea name="preventions" readonly></textarea>
         <div id="prompt-container">
-            <input id="preventions-prompt" type="text" placeholder="Wie soll die Nachricht angepasst werden?"
-                value="Kürze mir die Nachricht und entferne Massnahmen zum Thema Wasserschäden." />
+            <input id="preventions-prompt" type="text" placeholder="Wie soll die Nachricht angepasst werden?" />
             <button id="send-prevention" onclick="sendPrompt();">
                 <i class="fas fa-paper-plane"></i>
             </button>
@@ -187,7 +185,7 @@
         const paramId = urlParams.id || 0
 
         $.ajax({
-            url: "http://localhost:5000/api/case",
+            url: "http://prevent-iq.eu-central-1.elasticbeanstalk.com/api/case",
             method: "GET",
             contentType: "application/json",
             data: {
@@ -268,7 +266,7 @@
                 }
 
                 $.ajax({
-                    url: "http://localhost:5000/api/regenpreventions",
+                    url: "http://prevent-iq.eu-central-1.elasticbeanstalk.com/api/regenpreventions",
                     method: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(payload),

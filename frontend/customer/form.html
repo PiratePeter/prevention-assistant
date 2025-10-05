@@ -254,7 +254,6 @@
         #msform input {
             margin: 0;
         }
-
     </style>
 </head>
 
@@ -279,8 +278,7 @@
                 <input type="radio" name="damage" id="damage_no" value="no" />
                 <label for="damage_no" class="radio-btn">Nein</label>
             </div>
-            <textarea name="damage_desc" placeholder="Beschreiben Sie den Schaden">
-Beim letzten Hochwasser ist Wasser in meinen Keller eingedrungen.</textarea>
+            <textarea name="damage_desc" placeholder="Beschreiben Sie den Schaden"></textarea>
             <br />
 
             <a type="button" href="index.html" class="previous action-button">Zurück</a>
@@ -295,7 +293,7 @@ Beim letzten Hochwasser ist Wasser in meinen Keller eingedrungen.</textarea>
                 <select name="facade">
                     <option value="">Bitte wählen</option>
                     <option>Holz</option>
-                    <option selected>Putz</option>
+                    <option>Putz</option>
                     <option>Stein</option>
                 </select>
             </div>
@@ -303,7 +301,7 @@ Beim letzten Hochwasser ist Wasser in meinen Keller eingedrungen.</textarea>
                 <label>Dachfenster</label>
                 <select name="roof">
                     <option value="">Bitte wählen</option>
-                    <option selected>Dachfenster vorhanden</option>
+                    <option>Dachfenster vorhanden</option>
                     <option>Keine Dachfenster</option>
                 </select>
             </div>
@@ -311,7 +309,7 @@ Beim letzten Hochwasser ist Wasser in meinen Keller eingedrungen.</textarea>
                 <label>Kellergrube</label>
                 <select name="basement">
                     <option value="">Bitte wählen</option>
-                    <option selected>Vorhanden</option>
+                    <option>Vorhanden</option>
                     <option>Nicht vorhanden</option>
                 </select>
             </div>
@@ -320,7 +318,7 @@ Beim letzten Hochwasser ist Wasser in meinen Keller eingedrungen.</textarea>
                 <select name="heating">
                     <option value="">Bitte wählen</option>
                     <option>Holzofen</option>
-                    <option selected>Öl / Gas</option>
+                    <option>Öl / Gas</option>
                     <option>Elektro</option>
                 </select>
             </div>
@@ -342,15 +340,15 @@ Beim letzten Hochwasser ist Wasser in meinen Keller eingedrungen.</textarea>
             <h2 class="fs-title">Absenden</h2>
             <div class="select-group">
                 <label>Vorname</label>
-                <input type="text" name="customer-firstname" placeholder="Vorname" value="Alexander" />
+                <input type="text" name="customer-firstname" placeholder="Vorname" />
             </div>
             <div class="select-group">
                 <label>Nachname</label>
-                <input type="text" name="customer-name" placeholder="Nachname" value="Peter" />
+                <input type="text" name="customer-name" placeholder="Nachname" />
             </div>
             <div class="select-group">
                 <label>E-Mail</label>
-                <input type="email" name="customer-email" placeholder="E-Mail" value="alexander.peter@gmail.com" />
+                <input type="email" name="customer-email" placeholder="E-Mail" />
             </div>
             <p id="text-check-info">
                 Überprüfen Sie alle Angaben und senden Sie das Formular ab.
@@ -443,8 +441,13 @@ Beim letzten Hochwasser ist Wasser in meinen Keller eingedrungen.</textarea>
                 container.html("")
                 console.log(payload)
 
+                $("input.next.action-button")
+                    .attr("disabled", true)
+                $("input.previous.action-button")
+                    .attr("disabled", true)
+
                 $.ajax({
-                    url: "http://localhost:5000/api/risk",
+                    url: "http://prevent-iq.eu-central-1.elasticbeanstalk.com/api/risk",
                     method: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(payload),
@@ -460,6 +463,10 @@ Beim letzten Hochwasser ist Wasser in meinen Keller eingedrungen.</textarea>
                             container.append(fieldHTML)
                         })
                         stopCanvasAnimation()
+                        $("input.next.action-button")
+                            .attr("disabled", false)
+                        $("input.previous.action-button")
+                            .attr("disabled", false)
                     },
                     error: function (xhr, status, error) {
                         console.error("Fehler beim Senden:", error)
@@ -681,7 +688,7 @@ Beim letzten Hochwasser ist Wasser in meinen Keller eingedrungen.</textarea>
             )
 
             $.ajax({
-                url: "http://localhost:5000/api/case",
+                url: "http://prevent-iq.eu-central-1.elasticbeanstalk.com/api/case",
                 method: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(payload),

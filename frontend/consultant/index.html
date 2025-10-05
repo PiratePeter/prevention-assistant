@@ -57,7 +57,6 @@
         .btn-view:hover {
             background: #ee000c;
         }
-
     </style>
 </head>
 
@@ -81,7 +80,7 @@
     </div>
     <script>
         $.ajax({
-            url: "http://localhost:5000/api/cases",
+            url: "http://prevent-iq.eu-central-1.elasticbeanstalk.com/api/cases",
             method: "GET",
             contentType: "application/json",
             success: function (response) {
