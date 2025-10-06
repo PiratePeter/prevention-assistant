@@ -55,6 +55,13 @@
             text-decoration: none;
         }
 
+        #msform .action-button:disabled {
+            background: #a77f7f;
+            color: #eee;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
         #msform .action-button:hover,
         #msform .action-button:focus {
             box-shadow: 1px 1px 5px #771511;
@@ -447,7 +454,7 @@
                     .attr("disabled", true)
 
                 $.ajax({
-                    url: "https://d1kk3p27qukhwi.cloudfront.net/api/risk",
+                    url: "https://dnap3gsrukxoc.cloudfront.net/api/risk",
                     method: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(payload),
@@ -688,7 +695,7 @@
             )
 
             $.ajax({
-                url: "https://d1kk3p27qukhwi.cloudfront.net/api/case",
+                url: "https://dnap3gsrukxoc.cloudfront.net/api/case",
                 method: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(payload),
