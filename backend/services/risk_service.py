@@ -17,9 +17,9 @@ DANGER_LEVEL_MAP = {
     4: "erhebliche Gefährdung",
 }
 
-gdf = gpd.read_parquet("data/natgefka_sygefgeb.parquet")
-if gdf.geometry.name != "geometry":
-    gdf = gdf.set_geometry("geometry")
+# gdf = gpd.read_parquet("data/natgefka_sygefgeb.parquet")
+# if gdf.geometry.name != "geometry":
+#     gdf = gdf.set_geometry("geometry")
 
 
 def get_risk_evaluation_logic(request):
@@ -32,20 +32,23 @@ def get_risk_evaluation_logic(request):
     transformer = Transformer.from_crs("epsg:4326", "epsg:2056", always_xy=True)
     x, y = transformer.transform(lon, lat)
 
-    max_gefstu = check_max_gefstu(x, y)
+    # max_gefstu = check_max_gefstu(x, y)
 
     gis_data = fetch_gis_data(x, y)
 
     hail_risk = DANGER_LEVEL_MAP[-1]
     storm_risk = DANGER_LEVEL_MAP[-1]
+    flood_risk = DANGER_LEVEL_MAP[-1]
 
     if 0 < len(gis_data["features"]):
         attributes = gis_data["features"][0]["attributes"]
         hail_risk = attributes["HAGEL_TEXT"]
         storm_risk = attributes["STURM_TEXT"]
+        flood_risk = attributes["OBERFLAECHENABFLUSS_TEXT_DE"]
 
     risks = {
-        "HOCHWASSER": DANGER_LEVEL_MAP[max_gefstu],
+        # "HOCHWASSER": DANGER_LEVEL_MAP[max_gefstu],
+        "HOCHWASSER": flood_risk,
         "HAGEL": hail_risk,
         "STURM": storm_risk,
     }

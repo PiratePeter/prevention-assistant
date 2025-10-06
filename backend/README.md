@@ -70,9 +70,9 @@ pylint .
 pytest
 ```
 
-### Deploy backend to AWS
+### Zip files for AWS deployment
 
 ```bash
 
-eb deploy
+zip -r .elasticbeanstalk/app_versions/application.zip . -x@.ebignore
 ```

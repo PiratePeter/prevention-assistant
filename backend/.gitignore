@@ -1,7 +1,8 @@
 .env
 .coverage
+.pytest_cache
 .venv/
-data/
+data/*.parquet
 __pycache__/
 
 .elasticbeanstalk/*
